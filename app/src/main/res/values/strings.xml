@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">My Application</string>
+    <string name="status">Статус: </string>
+    <string name="themes">Теми</string>
+    <string name="select_theme">Оберіть тему</string>
+    <string name="own_phrase">Власні</string>
+    <string name="all_phrase">Усі</string>
+    <string name="fav_empty">Ваш список улюблених порожній</string>
+    <string name="all_empty">Ваш список фраз порожній</string>
+    <string name="own_empty">Ваш список власних порожній</string>
+    <string name="save">Зберегти</string>
+    <string name="pass_to_add_screen">перейдіть в додати</string>
+    <string name="pass_to_create_phrase_screen">створіть свою першу фразу!</string>
+    <string name="own_phrase_placeholder">Писати</string>
+
+    ROUTES:
+    <string name="add">Додати</string>
+    <string name="favorites">Улюблені</string>
+    <string name="profile">Профіль</string>
+    <string name="edit_profile">Змінити профіль</string>
+
+    DRAWER:
+    <string name="drawer_generate">Генерувати</string>
+    <string name="drawer_create_own">Створити власну</string>
+    <string name="drawer_about_program">Про програму</string>
+
+</resources>
