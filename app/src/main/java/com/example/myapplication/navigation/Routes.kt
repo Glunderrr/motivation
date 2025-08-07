@@ -1,43 +1,42 @@
 package com.example.myapplication.navigation
 
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.ContentTransform
 import androidx.compose.material.icons.Icons
 
-import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.navigation3.runtime.NavKey
 import com.example.myapplication.R
 import com.example.myapplication.data.model.Phrase
 import com.example.myapplication.view.screens.bottom.add.DrawerElement
-import com.google.gson.Gson
-import javax.inject.Singleton
+import kotlinx.serialization.Serializable
+import kotlin.Boolean
 
+@Serializable
 sealed class Routes(
-    val icon: ImageVector,
-    val labelId: Int,
-) {
-
+    val labelId: Int
+) : NavKey {
+    abstract fun getIcon(): ImageVector
+    @Serializable
     data class Add(
-        val drawerElement: DrawerElement = DrawerElement.Generate,
+        val drawerElement: String = DrawerElement.Generate.route,
         val phrase: Phrase? = null,
-    ) : Routes(Icons.Filled.Add, R.string.add)
+    ) : Routes(R.string.add) {
+        override fun getIcon() = Icons.Filled.Add
+    }
 
-    object Favorites :
-        Routes(Icons.Filled.Favorite, R.string.favorites)
+    @Serializable
+    data object Favorites :
+        Routes(R.string.favorites) {
+        override fun getIcon() = Icons.Filled.Favorite
+    }
 
-    object Profile :
-        Routes(Icons.Filled.Person, R.string.profile)
-
-    object EditProfile :
-        Routes(Icons.Default.Edit, R.string.edit_profile)
-
-    companion object {
-        val bottomBarRoutes = listOf<Routes>(
-            Add(),
-            Favorites,
-            Profile,
-        )
+    @Serializable
+    data object Profile :
+        Routes(R.string.profile) {
+        override fun getIcon() = Icons.Default.Person
     }
 }

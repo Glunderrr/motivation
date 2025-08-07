@@ -110,9 +110,9 @@ fun Add(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     IconButton(onClick = {
-                        scope.launch {
-                            drawerState.open()
-                        }
+                        /*     scope.launch {
+                                 drawerState.open()
+                             }*/
                     }) {
                         Icon(
                             imageVector = Icons.Default.Menu,

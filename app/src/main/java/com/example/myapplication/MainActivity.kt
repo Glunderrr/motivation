@@ -7,7 +7,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.Modifier
-import androidx.navigation.compose.rememberNavController
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import com.example.myapplication.navigation.AppNavigation
 import dagger.hilt.android.AndroidEntryPoint
@@ -18,11 +17,11 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            val navController = rememberNavController()
+           // val navController = rememberNavController()
             MyApplicationTheme {
                 AppNavigation(
                     modifier = Modifier.background(color = MaterialTheme.colorScheme.background),
-                    navController = navController
+                //    navController = navController
                 )
             }
         }

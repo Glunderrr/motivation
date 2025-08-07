@@ -1,10 +1,9 @@
 package com.example.myapplication.navigation
 
+import Transition
+import Transition.TransitionDirection
 import android.annotation.SuppressLint
 import android.util.Log
-import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -16,25 +15,18 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 
-import androidx.navigation.NavHostController
-import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.navArgument
-import androidx.navigation.toRoute
-import com.example.myapplication.data.model.Phrase
+import androidx.navigation3.runtime.NavEntry
+import androidx.navigation3.runtime.rememberNavBackStack
+import androidx.navigation3.ui.NavDisplay
 import com.example.myapplication.view.screens.bottom.favorite.Favorites
 import com.example.myapplication.view.screens.bottom.add.Add
 import com.example.myapplication.view.screens.bottom.add.AddUIAction
@@ -43,159 +35,136 @@ import com.example.myapplication.view.screens.bottom.add.DrawerElement
 import com.example.myapplication.view.screens.bottom.favorite.FavUIAction
 import com.example.myapplication.view.screens.bottom.favorite.FavViewModel
 import com.example.myapplication.view.screens.bottom.profile.Profile
-import com.example.myapplication.view.screens.bottom.profile.ProfileNavigateBundle
 import com.example.myapplication.view.screens.bottom.profile.ProfileViewModel
-import com.google.gson.Gson
 
 
 @SuppressLint("RememberReturnType")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppNavigation(modifier: Modifier, navController: NavHostController) {
-    var selectedIndex by remember { mutableIntStateOf(Routes.bottomBarRoutes.indexOf(Routes.Profile)) }
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    var lastRoute by remember { mutableStateOf(navBackStackEntry?.destination) }
-    /*    val routeToIndex =
-            Routes.bottomBarRoutes.mapIndexed { idx, item -> item to idx }.toMap()
-
-        LaunchedEffect(navBackStackEntry) {
-            navBackStackEntry?.destination?.route?.let { currentRoute ->
-                routeToIndex[currentRoute]?.let { idx ->
-                    selectedIndex = idx
-                }
-            }
-        }*/
+fun AppNavigation(modifier: Modifier /*navController: NavHostController*/) {
+    val backStack = rememberNavBackStack<Routes>(Routes.Profile)
+    val bottomBarRoutes = listOf(
+        Routes.Add(),
+        Routes.Favorites,
+        Routes.Profile
+    )
+    var selectedIndex by remember { mutableIntStateOf(bottomBarRoutes.indexOf(Routes.Profile)) }
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
         bottomBar = {
             BottomNavigationBar(
-                items = Routes.bottomBarRoutes,
+                items = bottomBarRoutes,
                 selectedIndex = selectedIndex,
-                onItemSelected = {
-                    selectedIndex = it
-                    navigateTo(
-                        navController,
-                        Routes.bottomBarRoutes[it].takeIf { it != Routes.Add() }
-                            ?: Routes.Add()
-                    )
+                onItemSelected = { item, index ->
+                    selectedIndex = index
+                    backStack.add(item)
                 }
             )
         }
     ) { innerPadding ->
-        NavHost(
+        NavDisplay(
             modifier = Modifier
+                .background(MaterialTheme.colorScheme.background)
                 .padding(innerPadding)
                 .fillMaxSize(),
-            navController = navController,
-            startDestination = Routes.Profile,
-        ) {
-            composable<Routes.Favorites>(
-                enterTransition = {
-                    slideIntoContainer(
-                        if (lastRoute == Routes.Add())
-                            AnimatedContentTransitionScope.SlideDirection.Left
-                        else
-                            AnimatedContentTransitionScope.SlideDirection.Right,
-                        tween(200, easing = LinearEasing)
-                    )
-                },
-                exitTransition = {
-                    slideOutOfContainer(
-                        if (selectedIndex == Routes.bottomBarRoutes.indexOf(Routes.Profile))
-                            AnimatedContentTransitionScope.SlideDirection.Left
-                        else
-                            AnimatedContentTransitionScope.SlideDirection.Right,
-                        tween(200, easing = LinearEasing)
-                    )
-                },
-            ) {
+            backStack = backStack,
+            onBack = {
+                backStack.removeLastOrNull()
+                selectedIndex = bottomBarRoutes.indexOf(backStack.last())
+            },
+            transitionSpec = {
+                val from = backStack.getOrNull(backStack.lastIndex - 1)
+                val to = backStack.last()
 
-                val viewModel = hiltViewModel<FavViewModel>()
-                val onAction = viewModel::onAction
-                val state by viewModel.uiState.collectAsState()
-                onAction(
-                    FavUIAction.SetNavigateFun { selectedDrawerElement, phrase ->
-                        navigateTo(
-                            navController = navController,
-                            route = Routes.Add(
-                                drawerElement = selectedDrawerElement,
-                                phrase = phrase
+                val fromIndex = from?.let { bottomBarRoutes.indexOf(it) } ?: -1
+                val toIndex = bottomBarRoutes.indexOf(to)
+
+                val direction = when {
+                    toIndex > fromIndex -> TransitionDirection.LEFT_TO_RIGHT
+                    toIndex < fromIndex -> TransitionDirection.RIGHT_TO_LEFT
+                    else -> error("Invalid route transition from $from to $to")
+                }
+
+                Transition.create(direction).invoke(this@NavDisplay)
+
+            },
+            entryProvider = { key ->
+                when (key) {
+                    Routes.Add() -> NavEntry(key) {
+                        val data = key as Routes.Add
+                        val viewModel = hiltViewModel<AddViewModel>()
+                        val onAction = viewModel::onAction
+                        val state by viewModel.uiState.collectAsState()
+                        onAction(
+                            AddUIAction.ChangeSelectedDrawerElement(
+                                if (data.drawerElement == DrawerElement.CreateOwn.route)
+                                    DrawerElement.CreateOwn
+                                else DrawerElement.Generate
                             )
                         )
+                        onAction(
+                            AddUIAction.SelectTheme(
+                                data.phrase?.theme ?: ""
+                            )
+                        )
+                        Add(
+                            modifier = modifier,
+                            onAction = onAction,
+                            uiState = state
+                        )
+
                     }
-                )
-                Favorites(
-                    uiState = state,
-                    onAction = onAction,
-                    modifier = modifier,
-                )
-            }
 
-            composable<Routes.Add>(
-                enterTransition = {
-                    slideIntoContainer(
-                        AnimatedContentTransitionScope.SlideDirection.Right,
-                        tween(200, easing = LinearEasing)
-                    )
-                },
-                exitTransition = {
-                    slideOutOfContainer(
-                        AnimatedContentTransitionScope.SlideDirection.Left,
-                        tween(200, easing = LinearEasing)
-                    )
-                }
-            ) {
-                val args = it.toRoute<Routes.Add>()
+                    is Routes.Favorites -> NavEntry(key) {
+                        val viewModel = hiltViewModel<FavViewModel>()
+                        val onAction = viewModel::onAction
+                        val state by viewModel.uiState.collectAsState()
 
-                val viewModel = hiltViewModel<AddViewModel>()
-                val onAction = viewModel::onAction
-                val state by viewModel.uiState.collectAsState()
-                onAction(
-                    AddUIAction.ChangeSelectedDrawerElement(
-                        when (args.drawerElement) {
-                            DrawerElement.CreateOwn -> DrawerElement.CreateOwn
-                            else -> DrawerElement.Generate
+                        onAction(
+                            FavUIAction.SetNavigateFun { selectedDrawerElement, phrase ->
+                                backStack.add(
+                                    Routes.Add(
+                                        drawerElement = selectedDrawerElement.route,
+                                        phrase = phrase
+                                    )
+                                )
+                            }
+                        )
+
+                        Favorites(
+                            uiState = state,
+                            onAction = onAction,
+                            modifier = modifier,
+                        )
+
+                    }
+
+                    is Routes.Profile -> NavEntry(key) {
+                        val viewModel = hiltViewModel<ProfileViewModel>()
+                        val state by viewModel.uiState.collectAsState()
+                        /*  viewModel.onAction(
+                            ProfileNavigateBundle(
+                                args.phrase,
+                                args.drawerElement
+                            )
+                        )*/
+                        Profile(
+                            modifier = Modifier.background(color = MaterialTheme.colorScheme.background),
+                            uiState = state,
+                            onAction = viewModel::onAction
+                        )
+                    }
+
+                    else -> {
+                        Log.wtf("AppNavigation", "Unknown route: $key")
+                        NavEntry(key) {
+                            Text("Unknown route: $key")
                         }
-                    )
-                )
-                onAction(
-                    AddUIAction.SelectTheme(
-                        args.phrase?.theme ?: ""
-                    )
-                )
-                Add(
-                    modifier = modifier,
-                    onAction = onAction,
-                    uiState = state
-                )
-            }
-
-            composable<Routes.Profile>(
-                enterTransition = {
-                    slideIntoContainer(
-                        AnimatedContentTransitionScope.SlideDirection.Left,
-                        tween(200, easing = LinearEasing)
-                    )
-                },
-                exitTransition = {
-                    slideOutOfContainer(
-                        AnimatedContentTransitionScope.SlideDirection.Right,
-                        tween(200, easing = LinearEasing)
-                    )
+                    }
                 }
-            ) {
-                val viewModel = hiltViewModel<ProfileViewModel>()
-                val state by viewModel.uiState.collectAsState()
-                val onAction = viewModel::onAction
-
-                Profile(
-                    modifier = modifier.background(color = MaterialTheme.colorScheme.background),
-                    uiState = state,
-                    onAction = onAction
-                )
             }
-        }
+        )
     }
 }
 
@@ -203,30 +172,21 @@ fun AppNavigation(modifier: Modifier, navController: NavHostController) {
 fun BottomNavigationBar(
     items: List<Routes>,
     selectedIndex: Int,
-    onItemSelected: (Int) -> Unit
+    onItemSelected: (Routes, Int) -> Unit
 ) {
     NavigationBar {
         items.forEachIndexed { index, item ->
             NavigationBarItem(
-                icon = { Icon(item.icon, contentDescription = stringResource(item.labelId)) },
+                icon = {
+                    Icon(
+                        item.getIcon(),
+                        contentDescription = stringResource(item.labelId),
+                    )
+                },
                 label = { Text(stringResource(item.labelId)) },
                 selected = selectedIndex == index,
-                onClick = { onItemSelected(index) }
+                onClick = { onItemSelected(item, index) }
             )
         }
-    }
-}
-
-private fun navigateTo(
-    navController: NavHostController,
-    route: Routes
-) {
-
-    navController.navigate(route) {
-        popUpTo(navController.graph.startDestinationId) {
-            saveState = true
-        }
-        launchSingleTop = true
-        restoreState = true
     }
 }

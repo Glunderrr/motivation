@@ -1,6 +1,7 @@
 package com.example.myapplication.view.screens.bottom.add
 
 import com.example.myapplication.R
+import kotlinx.serialization.Serializable
 
 sealed class DrawerElement(
     val route: String,
