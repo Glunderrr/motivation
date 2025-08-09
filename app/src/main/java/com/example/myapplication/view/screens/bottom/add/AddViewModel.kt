@@ -1,11 +1,10 @@
 package com.example.myapplication.view.screens.bottom.add
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.data.model.Phrase
 import com.example.myapplication.usecases.phrase.GeneratePhraseByTheme
-import com.example.myapplication.usecases.phrase.SavePhrase
+import com.example.myapplication.usecases.phrase.UpsertPhrase
 import com.example.myapplication.usecases.theme.GetTheme
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
@@ -18,7 +17,7 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class AddViewModel @Inject constructor(
     private val themeUseCase: GetTheme,
-    private val savePhraseUseCase: SavePhrase,
+    private val upsertPhraseUseCase: UpsertPhrase,
     private val generatePhraseByThemeUseCase: GeneratePhraseByTheme
 ) : ViewModel() {
 
@@ -42,14 +41,8 @@ class AddViewModel @Inject constructor(
             is AddUIAction.GeneratePhrase -> {
                 viewModelScope.launch {
                     val newPhrase =
-                        generatePhraseByThemeUseCase.invoke(_uiState.value.selectedTheme)
-                    _uiState.update { it.copy(newPhrase = newPhrase) }
-                }
-            }
-
-            is AddUIAction.SavePhrase -> {
-                viewModelScope.launch {
-                    savePhraseUseCase.invoke(_uiState.value.newPhrase!!)
+                        generatePhraseByThemeUseCase.invoke(_uiState.value.phrase.theme)
+                    _uiState.update { it.copy(phrase = newPhrase) }
                 }
             }
 
@@ -71,7 +64,13 @@ class AddViewModel @Inject constructor(
             }
 
             is AddUIAction.SelectTheme -> {
-                _uiState.update { it.copy(selectedTheme = action.theme) }
+                _uiState.update {
+                    it.copy(
+                        phrase = it.phrase.copy(
+                            theme = action.theme
+                        )
+                    )
+                }
             }
 
             is AddUIAction.IsLoading -> {
@@ -79,7 +78,7 @@ class AddViewModel @Inject constructor(
             }
 
             is AddUIAction.ChangeLikedStatusOfNewPhrase -> {
-                _uiState.update { it.copy(newPhrase = it.newPhrase!!.copy(isLiked = !it.newPhrase.isLiked)) }
+                _uiState.update { it.copy(phrase = it.phrase.copy(isLiked = !it.phrase.isLiked)) }
             }
 
 
@@ -91,35 +90,39 @@ class AddViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(
                         selectedDrawerElement = action.element,
-                        selectedTheme = "",
-                        newPhrase = null,
+                        phrase = Phrase()
                     )
                 }
-/*                Log.d(
-                    "AddViewModel",
-                    "ChangeSelectedDrawerElement: ${_uiState.value.selectedDrawerElement.route}"
-                )*/
             }
 
-            is AddUIAction.TypingOwnPhrase -> {
-                _uiState.update { it.copy(ownPhraseText = action.value) }
-            }
-
-            AddUIAction.SaveOwnPhrase -> {
-                viewModelScope.launch {
-                    savePhraseUseCase.invoke(
-                        Phrase(
-                            phrase = _uiState.value.ownPhraseText,
-                            theme = _uiState.value.selectedTheme,
-                            isOwn = true
+            is AddUIAction.TypingPhraseText -> {
+                _uiState.update {
+                    it.copy(
+                        phrase = it.phrase.copy(
+                            phrase = action.value
                         )
+                    )
+                }
+            }
+
+            AddUIAction.SavePhrase -> {
+                viewModelScope.launch {
+                    upsertPhraseUseCase.invoke(
+                        _uiState.value.phrase
                     )
                     _uiState.update {
                         it.copy(
-                            ownPhraseText = "",
-                            selectedTheme = ""
+                            phrase = Phrase()
                         )
                     }
+                }
+            }
+
+            is AddUIAction.SetPhraseToEdit -> {
+                _uiState.update {
+                    it.copy(
+                        phrase = action.phrase,
+                    )
                 }
             }
 

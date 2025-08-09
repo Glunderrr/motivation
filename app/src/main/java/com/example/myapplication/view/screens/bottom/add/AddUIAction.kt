@@ -3,23 +3,19 @@ package com.example.myapplication.view.screens.bottom.add
 import com.example.myapplication.data.model.Phrase
 
 sealed class AddUIAction {
-    data class SavePhrase(
-        val phrase: Phrase
-    ) : AddUIAction()
+    data object SavePhrase : AddUIAction()
 
     data class ChangeLikedStatusOfNewPhrase(
         val phrase: Phrase
     ) : AddUIAction()
 
-    class OpenThemeDialog() : AddUIAction()
-    class CloseThemeDialog() : AddUIAction()
+    data object OpenThemeDialog : AddUIAction()
+    data object CloseThemeDialog : AddUIAction()
 
-    class OpenPhraseDialog() : AddUIAction()
-    class ClosePhraseDialog() : AddUIAction()
+    data object OpenPhraseDialog : AddUIAction()
+    data object ClosePhraseDialog : AddUIAction()
 
-    data class GeneratePhrase(
-        val theme: String
-    ) : AddUIAction()
+    data object GeneratePhrase : AddUIAction()
 
     data class SelectTheme(
         val theme: String
@@ -39,9 +35,11 @@ sealed class AddUIAction {
         val element: DrawerElement
     ) : AddUIAction()
 
-    data class TypingOwnPhrase(
+    data class TypingPhraseText(
         val value: String
     ) : AddUIAction()
 
-    object SaveOwnPhrase : AddUIAction()
+    data class SetPhraseToEdit(
+        val phrase: Phrase
+    ) : AddUIAction()
 }

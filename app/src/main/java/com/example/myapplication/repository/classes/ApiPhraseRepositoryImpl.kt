@@ -26,7 +26,8 @@ class ApiPhraseRepositoryImpl @Inject constructor(
         return response.choices[0].message.content.let { content ->
             Phrase(
                 phrase = content,
-                theme = theme
+                theme = theme,
+                isOwn = false
             )
         }
     }

@@ -11,6 +11,7 @@ import com.example.myapplication.usecases.phrase.GetAllPhrases
 import com.example.myapplication.usecases.phrase.GetOwnPhrase
 import com.example.myapplication.usecases.theme.GetTheme
 import com.example.myapplication.usecases.utils.CopyPhraseToClipboard
+import com.example.myapplication.view.screens.bottom.favorite.FavUIAction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -84,7 +85,7 @@ class ProfileViewModel @Inject constructor(
                         }
 
                         state.copy(
-                            selectedThemes = themes.value   ,
+                            selectedThemes = themes.value,
                             allPhraseList = sortList(state.allPhraseList),
                             ownList = sortList(state.ownList)
                         )
@@ -102,9 +103,6 @@ class ProfileViewModel @Inject constructor(
                     updateSelectedList(action.phrase)
             }
 
-            is ProfUIAction.NavigateToAddScreen -> {
-                _uiState.value.profileNavigateBundle.navigateToAddScreen
-            }
 
             is ProfUIAction.ChangeIsAllPhrase -> {
                 _uiState.update { state ->
@@ -114,6 +112,21 @@ class ProfileViewModel @Inject constructor(
 
             is ProfUIAction.CopyToClipBoard -> {
                 copyPhraseToClipboard.invoke(action.phrase)
+            }
+
+            is ProfUIAction.SetNavigateFun -> {
+                _uiState.update { state ->
+                    state.copy(
+                        navigateToAddScreen = action.navigateToAddScreen
+                    )
+                }
+            }
+
+            is ProfUIAction.NavigateToAddScreen -> {
+                _uiState.value.navigateToAddScreen(
+                    action.drawerElement,
+                    action.phrase
+                )
             }
         }
     }
@@ -130,6 +143,7 @@ class ProfileViewModel @Inject constructor(
                 )
         }
     }
+
     private fun clearSelectedList() {
         _uiState.update {
             it.copy(

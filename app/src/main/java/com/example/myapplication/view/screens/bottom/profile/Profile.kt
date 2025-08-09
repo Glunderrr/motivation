@@ -50,6 +50,7 @@ import com.example.myapplication.ui.theme.Paddings
 import com.example.myapplication.view.elements.CustomTopBar
 import com.example.myapplication.view.elements.EmptyListTitle
 import com.example.myapplication.view.elements.PhraseCard
+import com.example.myapplication.view.screens.bottom.add.DrawerElement
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalLayoutApi::class, ExperimentalFoundationApi::class)
@@ -260,8 +261,20 @@ fun Profile(
                                 list = uiState.allPhraseList,
                                 upText = stringResource(R.string.all_empty),
                                 downText = stringResource(R.string.pass_to_add_screen),
-                                navigateTo = {
-                                    onAction(ProfUIAction.NavigateToAddScreen)
+                                navigateToEditPhrase = { drawerElement, phrase ->
+                                    onAction(
+                                        ProfUIAction.NavigateToAddScreen(
+                                            drawerElement = drawerElement,
+                                            phrase = phrase
+                                        )
+                                    )
+                                },
+                                navigateToAddFromEmptyScreen = {
+                                    onAction(
+                                        ProfUIAction.NavigateToAddScreen(
+                                            drawerElement = DrawerElement.Generate,
+                                        )
+                                    )
                                 },
                                 onLongPress = {
                                     onAction(ProfUIAction.LongPressCard(it))
@@ -285,8 +298,20 @@ fun Profile(
                                 list = uiState.ownList,
                                 upText = stringResource(R.string.own_empty),
                                 downText = stringResource(R.string.pass_to_create_phrase_screen),
-                                navigateTo = {
-                                    onAction(ProfUIAction.NavigateToAddScreen)
+                                navigateToEditPhrase = { drawerElement, phrase ->
+                                    onAction(
+                                        ProfUIAction.NavigateToAddScreen(
+                                            drawerElement = drawerElement,
+                                            phrase = phrase
+                                        )
+                                    )
+                                },
+                                navigateToAddFromEmptyScreen = {
+                                    onAction(
+                                        ProfUIAction.NavigateToAddScreen(
+                                            drawerElement = DrawerElement.CreateOwn,
+                                        )
+                                    )
                                 },
                                 onLongPress = {
                                     onAction(ProfUIAction.LongPressCard(it))
@@ -318,7 +343,8 @@ private fun CustomListPage(
     list: List<Phrase>,
     upText: String,
     downText: String,
-    navigateTo: () -> Unit,
+    navigateToAddFromEmptyScreen: () -> Unit,
+    navigateToEditPhrase: (DrawerElement, Phrase) -> Unit,
     onLongPress: (Phrase) -> Unit,
     onTap: (Phrase) -> Unit,
     onDoubleTap: (Phrase) -> Unit,
@@ -331,13 +357,12 @@ private fun CustomListPage(
             upText = upText,
             downText = downText,
         ) {
-            navigateTo()
+            navigateToAddFromEmptyScreen()
         }
     } else
         list.forEach { phrase ->
             key(
                 phrase.id,
-             //   phrase.isLiked
             ) {
                 PhraseCard(
                     phrase = phrase,
@@ -346,7 +371,8 @@ private fun CustomListPage(
                     onDoubleTap = onDoubleTap,
                     listIsEmpty = listIsEmpty,
                     onCopyClick = onCopyClick,
-                    selected = selected(phrase)
+                    selected = selected(phrase),
+                    onEdit = { navigateToEditPhrase(DrawerElement.CreateOwn, phrase) }
                 )
             }
 

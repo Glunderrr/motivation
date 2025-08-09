@@ -154,7 +154,7 @@ fun PhraseCard(
                         Icon(
                             imageVector = if (phrase.isLiked) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
                             tint = if (phrase.isLiked) colorScheme.primary else colorScheme.onSurface,
-                            contentDescription = "like Icon",
+                            contentDescription = "Like Icon",
                             modifier = Modifier
                                 .size(24.dp)
                                 .clip(CircleShape)
@@ -165,7 +165,7 @@ fun PhraseCard(
 
                         Icon(
                             imageVector = Icons.Default.ContentCopy,
-                            contentDescription = "like Icon",
+                            contentDescription = "Copy Icon",
                             modifier = Modifier
                                 .clip(shapes.small)
                                 .clickable { onCopyClick(phrase) }
@@ -176,7 +176,7 @@ fun PhraseCard(
                             Spacer(modifier.weight(1f))
                             Icon(
                                 imageVector = Icons.Default.Edit,
-                                contentDescription = "Copy All",
+                                contentDescription = "Edit phrase Icon",
                                 modifier = Modifier
                                     .clip(CircleShape)
                                     .clickable { onEdit(phrase) }

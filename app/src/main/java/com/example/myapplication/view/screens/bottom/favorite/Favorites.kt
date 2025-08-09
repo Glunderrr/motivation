@@ -36,7 +36,10 @@ fun Favorites(
             downText = stringResource(R.string.pass_to_add_screen),
         ) {
             onAction(
-                FavUIAction.NavigateToAddScreen(phrase = null)
+                FavUIAction.NavigateToAddScreen(
+                    drawerElement = DrawerElement.Generate,
+                    phrase = Phrase()
+                )
             )
         }
     } else {
@@ -56,7 +59,6 @@ fun Favorites(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(Paddings.Large.dp),
                 contentPadding = PaddingValues(vertical = Paddings.Large.dp),
-
                 ) {
                 items(uiState.favList) { phrase ->
                     PhraseCard(
@@ -72,7 +74,12 @@ fun Favorites(
                             onAction(FavUIAction.CopyPhrase(phrase))
                         },
                         onEdit = {
-                            onAction(FavUIAction.NavigateToAddScreen(phrase = phrase))
+                            onAction(
+                                FavUIAction.NavigateToAddScreen(
+                                    drawerElement = DrawerElement.CreateOwn,
+                                    phrase = phrase
+                                )
+                            )
                         },
                         listIsEmpty = uiState.selectedList.isEmpty(),
                         selected = uiState.selectedList.map { it.id }.contains(phrase.id)

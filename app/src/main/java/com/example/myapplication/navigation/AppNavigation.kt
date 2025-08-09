@@ -2,12 +2,11 @@ package com.example.myapplication.navigation
 
 import Transition
 import Transition.TransitionDirection
-import android.annotation.SuppressLint
 import android.util.Log
+import android.util.MutableInt
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -15,6 +14,8 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -23,10 +24,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 
 import androidx.navigation3.runtime.NavEntry
+import androidx.navigation3.runtime.NavEntryDecorator
 import androidx.navigation3.runtime.rememberNavBackStack
+import androidx.navigation3.runtime.rememberSavedStateNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
+import androidx.navigation3.ui.rememberSceneSetupNavEntryDecorator
 import com.example.myapplication.view.screens.bottom.favorite.Favorites
 import com.example.myapplication.view.screens.bottom.add.Add
 import com.example.myapplication.view.screens.bottom.add.AddUIAction
@@ -34,27 +39,30 @@ import com.example.myapplication.view.screens.bottom.add.AddViewModel
 import com.example.myapplication.view.screens.bottom.add.DrawerElement
 import com.example.myapplication.view.screens.bottom.favorite.FavUIAction
 import com.example.myapplication.view.screens.bottom.favorite.FavViewModel
+import com.example.myapplication.view.screens.bottom.profile.ProfUIAction
 import com.example.myapplication.view.screens.bottom.profile.Profile
 import com.example.myapplication.view.screens.bottom.profile.ProfileViewModel
 
 
-@SuppressLint("RememberReturnType")
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppNavigation(modifier: Modifier /*navController: NavHostController*/) {
+fun AppNavigation(modifier: Modifier) {
     val backStack = rememberNavBackStack<Routes>(Routes.Profile)
-    val bottomBarRoutes = listOf(
+    val bottomItems = listOf(
         Routes.Add(),
         Routes.Favorites,
         Routes.Profile
     )
-    var selectedIndex by remember { mutableIntStateOf(bottomBarRoutes.indexOf(Routes.Profile)) }
+    var selectedIndex by remember { mutableIntStateOf(bottomItems.indexOf(Routes.Profile)) }
+    LaunchedEffect(backStack.last()) {
+        selectedIndex =
+            bottomItems.map { it::class.java.name }.indexOf(backStack.last()::class.java.name)
+    }
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
         bottomBar = {
             BottomNavigationBar(
-                items = bottomBarRoutes,
+                items = bottomItems,
                 selectedIndex = selectedIndex,
                 onItemSelected = { item, index ->
                     selectedIndex = index
@@ -69,16 +77,20 @@ fun AppNavigation(modifier: Modifier /*navController: NavHostController*/) {
                 .padding(innerPadding)
                 .fillMaxSize(),
             backStack = backStack,
+            entryDecorators = listOf(
+                rememberSavedStateNavEntryDecorator(),
+                rememberViewModelStoreNavEntryDecorator(),
+                rememberSceneSetupNavEntryDecorator()
+            ),
             onBack = {
                 backStack.removeLastOrNull()
-                selectedIndex = bottomBarRoutes.indexOf(backStack.last())
             },
             transitionSpec = {
                 val from = backStack.getOrNull(backStack.lastIndex - 1)
                 val to = backStack.last()
 
-                val fromIndex = from?.let { bottomBarRoutes.indexOf(it) } ?: -1
-                val toIndex = bottomBarRoutes.indexOf(to)
+                val fromIndex = from?.let { bottomItems.indexOf(it) } ?: -1
+                val toIndex = bottomItems.indexOf(to)
 
                 val direction = when {
                     toIndex > fromIndex -> TransitionDirection.LEFT_TO_RIGHT
@@ -91,23 +103,20 @@ fun AppNavigation(modifier: Modifier /*navController: NavHostController*/) {
             },
             entryProvider = { key ->
                 when (key) {
-                    Routes.Add() -> NavEntry(key) {
-                        val data = key as Routes.Add
+                    is Routes.Add -> NavEntry(key) {
                         val viewModel = hiltViewModel<AddViewModel>()
                         val onAction = viewModel::onAction
                         val state by viewModel.uiState.collectAsState()
-                        onAction(
-                            AddUIAction.ChangeSelectedDrawerElement(
-                                if (data.drawerElement == DrawerElement.CreateOwn.route)
-                                    DrawerElement.CreateOwn
-                                else DrawerElement.Generate
+                        LaunchedEffect(true) {
+                            onAction(
+                                AddUIAction.ChangeSelectedDrawerElement(
+                                    if (key.drawerElement == DrawerElement.CreateOwn.route)
+                                        DrawerElement.CreateOwn
+                                    else DrawerElement.Generate
+                                )
                             )
-                        )
-                        onAction(
-                            AddUIAction.SelectTheme(
-                                data.phrase?.theme ?: ""
-                            )
-                        )
+                            onAction(AddUIAction.SetPhraseToEdit(key.phrase))
+                        }
                         Add(
                             modifier = modifier,
                             onAction = onAction,
@@ -120,7 +129,6 @@ fun AppNavigation(modifier: Modifier /*navController: NavHostController*/) {
                         val viewModel = hiltViewModel<FavViewModel>()
                         val onAction = viewModel::onAction
                         val state by viewModel.uiState.collectAsState()
-
                         onAction(
                             FavUIAction.SetNavigateFun { selectedDrawerElement, phrase ->
                                 backStack.add(
@@ -143,21 +151,27 @@ fun AppNavigation(modifier: Modifier /*navController: NavHostController*/) {
                     is Routes.Profile -> NavEntry(key) {
                         val viewModel = hiltViewModel<ProfileViewModel>()
                         val state by viewModel.uiState.collectAsState()
-                        /*  viewModel.onAction(
-                            ProfileNavigateBundle(
-                                args.phrase,
-                                args.drawerElement
-                            )
-                        )*/
+                        val onAction = viewModel::onAction
+
+                        onAction(
+                            ProfUIAction.SetNavigateFun { selectedDrawerElement, phrase ->
+                                backStack.add(
+                                    Routes.Add(
+                                        drawerElement = selectedDrawerElement.route,
+                                        phrase = phrase
+                                    )
+                                )
+                            }
+                        )
+
                         Profile(
                             modifier = Modifier.background(color = MaterialTheme.colorScheme.background),
                             uiState = state,
-                            onAction = viewModel::onAction
+                            onAction = onAction
                         )
                     }
 
                     else -> {
-                        Log.wtf("AppNavigation", "Unknown route: $key")
                         NavEntry(key) {
                             Text("Unknown route: $key")
                         }

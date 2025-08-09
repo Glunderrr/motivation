@@ -73,14 +73,10 @@ class FavViewModel @Inject constructor(
 
             is FavUIAction.NavigateToAddScreen -> {
                 _uiState.value.navigateToAddScreen(
-                    DrawerElement.CreateOwn,
+                    action.drawerElement,
                     action.phrase
                 )
 
-            }
-
-            is FavUIAction.CopyPhrase -> {
-                copyPhraseToClipboard.invoke(action.phrase)
             }
 
             is FavUIAction.SetNavigateFun -> {
@@ -89,6 +85,10 @@ class FavViewModel @Inject constructor(
                         navigateToAddScreen = action.navigateToAddScreen
                     )
                 }
+            }
+
+            is FavUIAction.CopyPhrase -> {
+                copyPhraseToClipboard.invoke(action.phrase)
             }
         }
     }

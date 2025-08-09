@@ -16,9 +16,9 @@ class PhraseRepositoryImpl @Inject constructor(
 
     override fun getAllOwn(): Flow<List<Phrase>> = dao.getAllOwn()
 
-    override suspend fun insert(phrase: Phrase) = dao.insert(phrase)
-
     override suspend fun update(vararg phrase: Phrase) = dao.update(*phrase)
+
+    override suspend fun upsert(phrase: Phrase) = dao.upsert(phrase)
 
     override suspend fun deleteAll(phrase: List<Phrase>) = dao.deleteAll(phrase)
 }

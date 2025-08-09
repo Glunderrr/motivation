@@ -1,6 +1,5 @@
 package com.example.myapplication.view.screens.bottom.add
 
-import android.util.Log
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -59,6 +58,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.myapplication.R
+import com.example.myapplication.data.model.Phrase
 import com.example.myapplication.ui.theme.Paddings
 import com.example.myapplication.view.elements.ChooseThemeButton
 import com.example.myapplication.view.elements.PhraseCard
@@ -78,9 +78,9 @@ fun Add(
     val scope = rememberCoroutineScope()
 
     ThemeDialog(showState = uiState.openThemeDialog, onDismissRequest = {
-        onAction(AddUIAction.CloseThemeDialog())
+        onAction(AddUIAction.CloseThemeDialog)
     }, themeList = uiState.themes, onClick = { item ->
-        onAction(AddUIAction.CloseThemeDialog())
+        onAction(AddUIAction.CloseThemeDialog)
         onAction(AddUIAction.SelectTheme(item.themeName))
     })
 
@@ -110,9 +110,9 @@ fun Add(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     IconButton(onClick = {
-                        /*     scope.launch {
-                                 drawerState.open()
-                             }*/
+                        scope.launch {
+                            drawerState.open()
+                        }
                     }) {
                         Icon(
                             imageVector = Icons.Default.Menu,
@@ -240,9 +240,9 @@ private fun GenerateScreenContent(
             ChooseThemeButton(
                 modifier = Modifier.fillMaxWidth(0.8f),
                 onClick = {
-                    onAction(AddUIAction.OpenThemeDialog())
+                    onAction(AddUIAction.OpenThemeDialog)
                 },
-                text = uiState.selectedTheme
+                text = uiState.phrase.theme
             )
         }
         Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.TopCenter) {
@@ -251,7 +251,7 @@ private fun GenerateScreenContent(
                 if (uiState.isLoading) {
                     delay(1440)
                     onAction(AddUIAction.IsLoading(false))
-                    onAction(AddUIAction.OpenPhraseDialog())
+                    onAction(AddUIAction.OpenPhraseDialog)
                 }
             }
             if (uiState.isLoading) {
@@ -263,14 +263,14 @@ private fun GenerateScreenContent(
             } else {
                 Button(
                     shape = CircleShape,
-                    enabled = uiState.selectedTheme.isNotBlank(),
+                    enabled = uiState.phrase.theme.isNotBlank(),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = colorScheme.primary,
                         contentColor = colorScheme.onPrimary
                     ),
                     modifier = Modifier.size(size),
                     onClick = {
-                        onAction(AddUIAction.GeneratePhrase(uiState.selectedTheme))
+                        onAction(AddUIAction.GeneratePhrase)
                         onAction(AddUIAction.IsLoading(true))
                     },
                 ) {
@@ -293,10 +293,10 @@ private fun ShowNewPhrase(
     var showLikeAnimation by remember {
         mutableStateOf(false)
     }
-    if (uiState.openPhraseDialog && uiState.newPhrase != null) {
+    if (uiState.openPhraseDialog && uiState.phrase.phrase.isNotBlank() ) {
         Dialog(
             onDismissRequest = {
-                onAction(AddUIAction.ClosePhraseDialog())
+                onAction(AddUIAction.ClosePhraseDialog)
             }, properties = DialogProperties(
                 dismissOnBackPress = true, dismissOnClickOutside = true
             )
@@ -308,11 +308,11 @@ private fun ShowNewPhrase(
                         shape = RoundedCornerShape(Paddings.Large.dp)
                     )
                     .padding(Paddings.Small.dp)
-                    .pointerInput(uiState.newPhrase.isLiked) {
+                    .pointerInput(uiState.phrase.isLiked) {
                         detectTapGestures(
                             onDoubleTap = {
-                                onAction(AddUIAction.ChangeLikedStatusOfNewPhrase(uiState.newPhrase))
-                                showLikeAnimation = !uiState.newPhrase.isLiked
+                                onAction(AddUIAction.ChangeLikedStatusOfNewPhrase(uiState.phrase))
+                                showLikeAnimation = !uiState.phrase.isLiked
                             })
                     }, verticalArrangement = Arrangement.spacedBy(Paddings.Small.dp)
 
@@ -321,7 +321,7 @@ private fun ShowNewPhrase(
                     modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center
                 ) {
                     PhraseCard(
-                        phrase = uiState.newPhrase
+                        phrase = uiState.phrase
                     )
                     this@Column.AnimatedVisibility(
                         visible = showLikeAnimation,
@@ -347,7 +347,7 @@ private fun ShowNewPhrase(
                 ) {
                     IconButton(
                         onClick = {
-                            onAction(AddUIAction.ClosePhraseDialog())
+                            onAction(AddUIAction.ClosePhraseDialog)
                         }) {
                         Icon(
                             imageVector = Icons.Filled.Close,
@@ -357,19 +357,19 @@ private fun ShowNewPhrase(
                     }
                     IconButton(
                         onClick = {
-                            onAction(AddUIAction.ChangeLikedStatusOfNewPhrase(uiState.newPhrase))
+                            onAction(AddUIAction.ChangeLikedStatusOfNewPhrase(uiState.phrase))
                         }) {
                         Icon(
-                            imageVector = if (uiState.newPhrase.isLiked) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
-                            tint = if (uiState.newPhrase.isLiked) colorScheme.primary else colorScheme.onSurface,
+                            imageVector = if (uiState.phrase.isLiked) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
+                            tint = if (uiState.phrase.isLiked) colorScheme.primary else colorScheme.onSurface,
                             contentDescription = "New like Icon",
                             modifier = Modifier.size(24.dp)
                         )
                     }
                     Button(
                         modifier = Modifier.weight(1f), onClick = {
-                            onAction(AddUIAction.SavePhrase(uiState.newPhrase))
-                            onAction(AddUIAction.ClosePhraseDialog())
+                            onAction(AddUIAction.SavePhrase)
+                            onAction(AddUIAction.ClosePhraseDialog)
                             showLikeAnimation = false
                         }) {
                         Text(

@@ -32,6 +32,7 @@ nav3Lifecycle = "1.0.0-alpha01"
 kotlinSerialization = "2.1.21"
 kotlinxSerializationCore = "1.8.1"
 navigation3Ui = "1.0.0-alpha06"
+lifecycleViewmodelNavigation3 = "1.0.0-alpha04"
 
 [libraries]
 # Core Navigation 3 libraries
@@ -84,6 +85,7 @@ logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-intercep
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okHttpVersion" }
 retrofit-v290 = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 navigation3-ui = { group = "androidx.navigation3", name = "navigation3-ui", version.ref = "navigation3Ui" }
+lifecycle-viewmodel-navigation3 = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-navigation3", version.ref = "lifecycleViewmodelNavigation3" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

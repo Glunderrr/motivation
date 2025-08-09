@@ -19,10 +19,11 @@ sealed class FavUIAction {
     object ClearSelectedList : FavUIAction()
     object DeleteSelectedPhrases : FavUIAction()
     data class NavigateToAddScreen(
-        val phrase: Phrase?,
+        val drawerElement: DrawerElement,
+        val phrase: Phrase,
     ) : FavUIAction()
 
     data class SetNavigateFun(
-        val navigateToAddScreen: (DrawerElement, Phrase?) -> Unit,
+        val navigateToAddScreen: (DrawerElement, Phrase) -> Unit,
     ) : FavUIAction()
 }

@@ -10,7 +10,7 @@ interface PhraseRepository {
 
     fun getAllOwn(): Flow<List<Phrase>>
 
-    suspend fun insert(phrase: Phrase)
+    suspend fun upsert(phrase: Phrase)
     suspend fun update(vararg phrase: Phrase)
 
     suspend fun deleteAll(phrase: List<Phrase>)

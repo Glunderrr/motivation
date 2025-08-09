@@ -1,7 +1,5 @@
 package com.example.myapplication.navigation
 
-import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.animation.ContentTransform
 import androidx.compose.material.icons.Icons
 
 import androidx.compose.material.icons.filled.Add
@@ -13,17 +11,17 @@ import com.example.myapplication.R
 import com.example.myapplication.data.model.Phrase
 import com.example.myapplication.view.screens.bottom.add.DrawerElement
 import kotlinx.serialization.Serializable
-import kotlin.Boolean
 
 @Serializable
 sealed class Routes(
     val labelId: Int
 ) : NavKey {
     abstract fun getIcon(): ImageVector
+
     @Serializable
     data class Add(
         val drawerElement: String = DrawerElement.Generate.route,
-        val phrase: Phrase? = null,
+        val phrase: Phrase = Phrase(),
     ) : Routes(R.string.add) {
         override fun getIcon() = Icons.Filled.Add
     }

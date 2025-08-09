@@ -3,24 +3,19 @@ package com.example.myapplication.view.screens.own
 import androidx.compose.foundation.layout.Arrangement
 import com.example.myapplication.R
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import com.example.myapplication.ui.theme.Paddings
 import com.example.myapplication.view.elements.ChooseThemeButton
 import com.example.myapplication.view.screens.bottom.add.AddUIAction
 import com.example.myapplication.view.screens.bottom.add.AddUIState
-import java.nio.file.WatchEvent
 
 
 @Composable
@@ -37,17 +32,17 @@ fun Own(
         ChooseThemeButton(
             modifier = Modifier.fillMaxWidth(0.9f),
             onClick = {
-                onAction(AddUIAction.OpenThemeDialog())
+                onAction(AddUIAction.OpenThemeDialog)
             },
-            text = uiState.selectedTheme,
+            text = uiState.phrase.theme,
         )
         OutlinedTextField(
             modifier = Modifier
                 .weight(9f)
                 .fillMaxWidth(0.9f),
-            value = uiState.ownPhraseText,
+            value = uiState.phrase.phrase,
             onValueChange = {
-                onAction(AddUIAction.TypingOwnPhrase(it))
+                onAction(AddUIAction.TypingPhraseText(it))
             },
             placeholder = {
                 Text(
@@ -58,13 +53,13 @@ fun Own(
         )
         Button(
             modifier = Modifier.fillMaxWidth(0.9f),
-            enabled = uiState.ownPhraseText.isNotEmpty() && uiState.selectedTheme.isNotEmpty(),
+            enabled = uiState.phrase.phrase.isNotEmpty() && uiState.phrase.theme.isNotEmpty(),
             onClick = {
-                onAction(AddUIAction.SaveOwnPhrase)
+                onAction(AddUIAction.OpenPhraseDialog)
             }
         ) {
             Text(
-                text = stringResource(id = R.string.save),
+                text = stringResource(id = R.string.add),
                 style = typography.bodyMedium
             )
         }

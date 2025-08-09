@@ -10,9 +10,9 @@ import java.util.Date
 @Entity(tableName = "phrases")
 data class Phrase(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    val phrase: String,
-    val theme: String,
+    val phrase: String = "",
+    val theme: String = "",
     val isLiked: Boolean = false,
-    val isOwn: Boolean = false,
+    val isOwn: Boolean = true,
     val date: String = SimpleDateFormat("dd-MM-yyyy").format(Date())
 )
