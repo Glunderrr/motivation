@@ -24,7 +24,6 @@ import javax.inject.Inject
 class ProfileViewModel @Inject constructor(
     private val copyPhraseToClipboard: CopyPhraseToClipboard,
     private val getTheme: GetTheme,
-    private val getPersonalData: GetPersonalData,
     private val getAllPhrases: GetAllPhrases,
     private val deletePhrases: DeletePhrases,
     private val getOwnPhrase: GetOwnPhrase,
@@ -33,6 +32,7 @@ class ProfileViewModel @Inject constructor(
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ProfUIState())
     val uiState: StateFlow<ProfUIState> = _uiState
+
 
     init {
         viewModelScope.launch {
