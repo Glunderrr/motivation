@@ -32,7 +32,7 @@ class UserParametersState @Inject constructor(
     var personalDataIsBlank by mutableStateOf(true)
         private set
     private val _state = MutableStateFlow(Personal())
-    val state: StateFlow<Personal> = _state.asStateFlow()
+    val personalState: StateFlow<Personal> = _state.asStateFlow()
 
 
     fun launch() {
@@ -54,7 +54,7 @@ class UserParametersState @Inject constructor(
 
     fun savePersonalData() {
         scope.launch {
-            personalRepository.insertPersonal(_state.value)
+            personalRepository.upsertPersonal(_state.value)
             personalDataIsBlank = false
         }
     }

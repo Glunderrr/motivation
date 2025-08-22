@@ -28,11 +28,11 @@ class ApiPhraseRepositoryImpl @Inject constructor(
                             Theme: ${theme}
                             
                             User profile:
-                            Age: ${userParam.state.value.age}, Gender: ${userParam.state.value.gender}, Region: ${userParam.state.value.region}
-                            Personality: ${userParam.state.value.personality}, Emotional state: ${userParam.state.value.emotionalState}, Values: ${userParam.state.value.userValues}
-                            Goal: ${userParam.state.value.mainGoal}, Field: ${userParam.state.value.field}, Challenges: ${userParam.state.value.challenges}, Experience: ${userParam.state.value.experienceLevel}
+                            Age: ${userParam.personalState.value.age}, Gender: ${userParam.personalState.value.gender}, Region: ${userParam.personalState.value.region}
+                            Personality: ${userParam.personalState.value.personality}, Emotional state: ${userParam.personalState.value.emotionalState}, Values: ${userParam.personalState.value.userValues}
+                            Goal: ${userParam.personalState.value.mainGoal}, Field: ${userParam.personalState.value.field}, Challenges: ${userParam.personalState.value.challenges}, Experience: ${userParam.personalState.value.experienceLevel}
 
-                            Tone: ${userParam.state.value.tone}, Format: ${userParam.state.value.format}, Max length: ${userParam.state.value.maxLength} words, Address user: ${userParam.state.value.addressUser}
+                            Tone: ${userParam.personalState.value.tone}, Format: ${userParam.personalState.value.format}, Max length: ${userParam.personalState.value.maxLength} words, Address user: ${userParam.personalState.value.addressUser}
 
                             Rules:
                             - Only natural modern Ukrainian, no archaic words.

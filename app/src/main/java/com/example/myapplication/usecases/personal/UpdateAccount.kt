@@ -7,6 +7,6 @@ import javax.inject.Inject
 class UpdateAccount @Inject constructor(
     private val personalRepository: PersonalRepository
 ) {
-    suspend fun invoke(account: Personal) =
-        personalRepository.updatePersonal(account)
+    suspend fun invoke(persona: Personal) =
+        personalRepository.upsertPersonal(persona)
 }

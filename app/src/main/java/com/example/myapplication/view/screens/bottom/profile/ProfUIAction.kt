@@ -42,4 +42,11 @@ sealed class ProfUIAction {
     data class SetNavigateFun(
         val navigateToAddScreen: (DrawerElement, Phrase) -> Unit,
     ) : ProfUIAction()
+
+    data class SetPersonalData(
+        val key: String,
+        val value: Any?
+    ) : ProfUIAction()
+
+    object SavePersonalData : ProfUIAction()
 }

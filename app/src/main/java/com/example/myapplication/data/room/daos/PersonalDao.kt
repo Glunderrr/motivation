@@ -2,20 +2,15 @@ package com.example.myapplication.data.room.daos
 
 import androidx.room.Dao
 import androidx.room.Delete
-import androidx.room.Insert
 import androidx.room.Query
-import androidx.room.Update
+import androidx.room.Upsert
 import com.example.myapplication.data.model.Personal
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PersonalDao {
-    @Insert
-    suspend fun insertPersonal(account: Personal)
-
-    @Update
-    suspend fun updatePersonal(account: Personal)
-
+    @Upsert
+    suspend fun upsertPersonal(account: Personal)
     @Delete
     suspend fun deletePersonal(account: Personal)
 

@@ -54,7 +54,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun SignUpScreen(
     modifier: Modifier = Modifier,
-    userState: State<Personal>,
+    personalState: State<Personal>,
     onChangeByKey: (key: String, value: Any?) -> Unit,
     onSave: () -> Unit
 ) {
@@ -128,7 +128,7 @@ fun SignUpScreen(
 
                 1 -> FirstScreen(
                     modifier = modifier,
-                    userState = userState,
+                    personalState = personalState,
                     onChangeByKey = onChangeByKey,
                 ) {
                     scope.launch { pagerState.scrollToPage(2) }
@@ -136,7 +136,7 @@ fun SignUpScreen(
 
                 2 -> SecondScreen(
                     modifier = modifier,
-                    userState = userState,
+                    personalState = personalState,
                     onChangeByKey = onChangeByKey
                 ) {
                     scope.launch { pagerState.scrollToPage(3) }
@@ -144,7 +144,7 @@ fun SignUpScreen(
 
                 3 -> ThirdScreen(
                     modifier = modifier,
-                    userState = userState,
+                    personalState = personalState,
                     onChangeByKey = onChangeByKey
                 ) {
                     scope.launch { pagerState.scrollToPage(4) }
@@ -191,7 +191,7 @@ fun StartScreen(
 @Composable
 fun FirstScreen(
     modifier: Modifier = Modifier,
-    userState: State<Personal>,
+    personalState: State<Personal>,
     onChangeByKey: (String, Any?) -> Unit,
     nextButtonClick: () -> Unit
 ) {
@@ -216,7 +216,7 @@ fun FirstScreen(
         }
         item {
             CustomTextField(
-                value = userState.value.name,
+                value = personalState.value.name,
                 modifier = Modifier.fillMaxWidth(0.9f),
                 onChange = { string -> onChangeByKey(Personal.NAME_KEY, string) },
                 label = stringResource(R.string.enter_your_name),
@@ -225,8 +225,8 @@ fun FirstScreen(
         item {
             SelectTextField(
                 modifier = Modifier.fillMaxWidth(0.9f),
-                value = if (userState.value.age != 0)
-                    userState.value.age.toString()
+                value = if (personalState.value.age != 0)
+                    personalState.value.age.toString()
                 else "",
                 onAgeSelected = { onChangeByKey(Personal.AGE_KEY, it.toInt()) },
                 label = stringResource(R.string.enter_your_age),
@@ -237,7 +237,7 @@ fun FirstScreen(
         item {
             SelectTextField(
                 modifier = Modifier.fillMaxWidth(0.9f),
-                value = userState.value.gender,
+                value = personalState.value.gender,
                 onAgeSelected = { onChangeByKey(Personal.GENDER_KEY, it) },
                 label = stringResource(R.string.enter_your_gender),
                 dialogLabel = stringResource(R.string.enter_your_gender_dialog),
@@ -248,7 +248,7 @@ fun FirstScreen(
         item {
             SelectTextField(
                 modifier = Modifier.fillMaxWidth(0.9f),
-                value = userState.value.region,
+                value = personalState.value.region,
                 onAgeSelected = { onChangeByKey(Personal.REGION_KEY, it) },
                 label = stringResource(R.string.enter_your_region),
                 dialogLabel = stringResource(R.string.enter_your_region_dialog),
@@ -259,7 +259,7 @@ fun FirstScreen(
             NextButton(
                 modifier = Modifier.fillMaxWidth(0.9f),
                 onClick = nextButtonClick,
-                enabled = with(userState.value) {
+                enabled = with(personalState.value) {
                     name.isNotEmpty() && age != 0 && gender.isNotEmpty() && region.isNotEmpty()
                 }
             )
@@ -271,7 +271,7 @@ fun FirstScreen(
 @Composable
 fun SecondScreen(
     modifier: Modifier = Modifier,
-    userState: State<Personal>,
+    personalState: State<Personal>,
     onChangeByKey: (String, Any?) -> Unit,
     nextButtonClick: () -> Unit
 ) {
@@ -297,7 +297,7 @@ fun SecondScreen(
         item {
             MultiSelectTextField(
                 modifier = Modifier.fillMaxWidth(0.9f),
-                value = userState.value.personality,
+                value = personalState.value.personality,
                 onValueSelected = { onChangeByKey(Personal.PERSONALITY_KEY, it) },
                 label = stringResource(R.string.enter_your_personality),
                 dialogLabel = stringResource(R.string.enter_your_personality_dialog),
@@ -307,7 +307,7 @@ fun SecondScreen(
         item {
             MultiSelectTextField(
                 modifier = Modifier.fillMaxWidth(0.9f),
-                value = userState.value.emotionalState,
+                value = personalState.value.emotionalState,
                 onValueSelected = { onChangeByKey(Personal.EMOTIONAL_STATE_KEY, it) },
                 label = stringResource(R.string.enter_your_emotional_state),
                 dialogLabel = stringResource(R.string.enter_your_emotional_state_dialog),
@@ -318,7 +318,7 @@ fun SecondScreen(
         item {
             MultiSelectTextField(
                 modifier = Modifier.fillMaxWidth(0.9f),
-                value = userState.value.userValues,
+                value = personalState.value.userValues,
                 onValueSelected = { onChangeByKey(Personal.USER_VALUES_KEY, it) },
                 label = stringResource(R.string.enter_your_values),
                 dialogLabel = stringResource(R.string.enter_your_values_dialog),
@@ -328,7 +328,7 @@ fun SecondScreen(
 
         item {
             CustomTextField(
-                value = userState.value.mainGoal,
+                value = personalState.value.mainGoal,
                 modifier = Modifier.fillMaxWidth(0.9f),
                 onChange = { string -> onChangeByKey(Personal.MAIN_GOAL_KEY, string) },
                 label = stringResource(R.string.enter_your_main_goal),
@@ -338,7 +338,7 @@ fun SecondScreen(
         item {
             MultiSelectTextField(
                 modifier = Modifier.fillMaxWidth(0.9f),
-                value = userState.value.field,
+                value = personalState.value.field,
                 onValueSelected = { onChangeByKey(Personal.FIELD_KEY, it) },
                 label = stringResource(R.string.enter_your_field),
                 dialogLabel = stringResource(R.string.enter_your_field_dialog),
@@ -348,7 +348,7 @@ fun SecondScreen(
         item {
             MultiSelectTextField(
                 modifier = Modifier.fillMaxWidth(0.9f),
-                value = userState.value.challenges,
+                value = personalState.value.challenges,
                 onValueSelected = { onChangeByKey(Personal.CHALLENGES_KEY, it) },
                 label = stringResource(R.string.enter_your_challenges),
                 dialogLabel = stringResource(R.string.enter_your_challenges_dialog),
@@ -358,7 +358,7 @@ fun SecondScreen(
         item {
             SelectTextField(
                 modifier = Modifier.fillMaxWidth(0.9f),
-                value = userState.value.experienceLevel,
+                value = personalState.value.experienceLevel,
                 onAgeSelected = { onChangeByKey(Personal.EXPERIENCE_LEVEL_KEY, it) },
                 label = stringResource(R.string.enter_your_experience_level),
                 dialogLabel = stringResource(R.string.enter_your_experience_level_dialog),
@@ -369,7 +369,7 @@ fun SecondScreen(
             NextButton(
                 modifier = Modifier.fillMaxWidth(0.9f),
                 onClick = nextButtonClick,
-                enabled = with(userState.value) {
+                enabled = with(personalState.value) {
                     personality.isNotEmpty() && emotionalState.isNotEmpty() &&
                             userValues.isNotEmpty() && mainGoal.isNotEmpty() &&
                             field.isNotEmpty() && challenges.isNotEmpty() &&
@@ -383,7 +383,7 @@ fun SecondScreen(
 @Composable
 fun ThirdScreen(
     modifier: Modifier = Modifier,
-    userState: State<Personal>,
+    personalState: State<Personal>,
     onChangeByKey: (String, Any?) -> Unit,
     nextButtonClick: () -> Unit
 ) {
@@ -409,7 +409,7 @@ fun ThirdScreen(
         item {
             SelectTextField(
                 modifier = Modifier.fillMaxWidth(0.9f),
-                value = userState.value.tone,
+                value = personalState.value.tone,
                 onAgeSelected = { onChangeByKey(Personal.TONE_KEY, it) },
                 label = stringResource(R.string.enter_your_tone),
                 dialogLabel = stringResource(R.string.enter_your_tone_dialog),
@@ -420,7 +420,7 @@ fun ThirdScreen(
         item {
             SelectTextField(
                 modifier = Modifier.fillMaxWidth(0.9f),
-                value = userState.value.format,
+                value = personalState.value.format,
                 onAgeSelected = { onChangeByKey(Personal.FORMAT_KEY, it) },
                 label = stringResource(R.string.enter_your_format),
                 dialogLabel = stringResource(R.string.enter_your_format_dialog),
@@ -430,8 +430,8 @@ fun ThirdScreen(
         item {
             SelectTextField(
                 modifier = Modifier.fillMaxWidth(0.9f),
-                value = if (userState.value.maxLength != 0)
-                    userState.value.maxLength.toString()
+                value = if (personalState.value.maxLength != 0)
+                    personalState.value.maxLength.toString()
                 else "",
                 onAgeSelected = { onChangeByKey(Personal.MAX_LENGTH_KEY, it.toInt()) },
                 label = stringResource(R.string.enter_your_max_length),
@@ -447,11 +447,11 @@ fun ThirdScreen(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "Звертатися до мене по імені",
+                    text = stringResource(R.string.enter_address_user),
                     style = MaterialTheme.typography.titleMedium,
                 )
                 Switch(
-                    checked = userState.value.addressUser,
+                    checked = personalState.value.addressUser,
                     onCheckedChange = { onChangeByKey(Personal.ADDRESS_USER_KEY, it) }
                 )
             }
@@ -460,7 +460,7 @@ fun ThirdScreen(
             NextButton(
                 modifier = Modifier.fillMaxWidth(0.9f),
                 onClick = nextButtonClick,
-                enabled = with(userState.value) {
+                enabled = with(personalState.value) {
                     tone.isNotEmpty() && format.isNotEmpty() &&
                             maxLength != 0
                 }

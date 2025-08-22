@@ -14,7 +14,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -31,7 +30,6 @@ import androidx.navigation3.runtime.rememberSavedStateNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import androidx.navigation3.ui.rememberSceneSetupNavEntryDecorator
 import com.example.myapplication.data.global_states.UserParametersState
-import com.example.myapplication.data.model.Personal
 import com.example.myapplication.view.screens.bottom.favorite.Favorites
 import com.example.myapplication.view.screens.bottom.add.Add
 import com.example.myapplication.view.screens.bottom.add.AddUIAction
@@ -55,7 +53,7 @@ fun AppNavigation(
             modifier = modifier
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.background),
-            userState = userParam.state.collectAsState(),
+            personalState = userParam.personalState.collectAsState(),
             onChangeByKey = userParam::updateFieldByKey,
             onSave = userParam::savePersonalData
         )
@@ -168,6 +166,7 @@ fun AppNavigation(
                         is Routes.Profile -> NavEntry(key) {
                             val viewModel = hiltViewModel<ProfileViewModel>()
                             val state by viewModel.uiState.collectAsState()
+                            val personalState by userParam.personalState.collectAsState()
                             val onAction = viewModel::onAction
 
                             onAction(
@@ -184,6 +183,7 @@ fun AppNavigation(
                             Profile(
                                 modifier = Modifier.background(color = MaterialTheme.colorScheme.background),
                                 uiState = state,
+                                personalState = personalState,
                                 onAction = onAction
                             )
                         }

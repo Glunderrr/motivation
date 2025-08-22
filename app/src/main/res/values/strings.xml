@@ -14,12 +14,16 @@
     <string name="own_phrase_placeholder">Писати</string>
     <string name="next">Далі</string>
 
+    PROFILE PERSONAL DATA:
+    <string name="personal_data">Змінити особисті дані</string>
+    <string name="change_details">Змінити</string>
+
     SIGN UP:
     <string name="sign_up_start_screen">Привіт\nмене звати Мотивчик!</string>
     <string name="sign_up_first_screen">Заповніть свій профіль, щоб отримувати найкращі мотиваційні фрази!</string>
     <string name="sign_up_second_screen">Продовжуйте заповнювати дані про себе :)</string>
     <string name="sign_up_third_screen">Налаштуйте, якими ви хочете бачити ваші фрази!</string>
-    <string name="sign_up_last_screen">Ви успішно усе заповнили, молодці!</string>
+    <string name="sign_up_last_screen">Ви успішно усе заповнили, молодці !</string>
 
     <string name="enter_your_name">Ім\'я</string>
 
@@ -61,6 +65,8 @@
 
     <string name="enter_your_max_length">Максимальна довжина</string>
     <string name="enter_your_max_length_dialog">Вкажіть максимальну довжину повідомлення</string>
+
+    <string name="enter_address_user">Звертатися до мене по імені</string>
 
     <string name="ok">Ок</string>
     <string name="cancel">Скасувати</string>

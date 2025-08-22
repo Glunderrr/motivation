@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.data.model.Phrase
 import com.example.myapplication.data.global_states.GlobalSortedParameters
-import com.example.myapplication.usecases.personal.GetPersonalData
+import com.example.myapplication.data.global_states.UserParametersState
 import com.example.myapplication.usecases.phrase.ChangePhraseLikedStatus
 import com.example.myapplication.usecases.phrase.DeletePhrases
 import com.example.myapplication.usecases.phrase.GetAllPhrases
@@ -28,11 +28,11 @@ class ProfileViewModel @Inject constructor(
     private val deletePhrases: DeletePhrases,
     private val getOwnPhrase: GetOwnPhrase,
     private val changePhraseLikedStatus: ChangePhraseLikedStatus,
-    private val sortParam: GlobalSortedParameters
+    private val sortParam: GlobalSortedParameters,
+    private val userParam: UserParametersState
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ProfUIState())
     val uiState: StateFlow<ProfUIState> = _uiState
-
 
     init {
         viewModelScope.launch {
@@ -126,6 +126,14 @@ class ProfileViewModel @Inject constructor(
                     action.drawerElement,
                     action.phrase
                 )
+            }
+
+            is ProfUIAction.SetPersonalData -> {
+                userParam.updateFieldByKey(action.key, action.value)
+            }
+
+            ProfUIAction.SavePersonalData -> {
+                userParam.savePersonalData()
             }
         }
     }

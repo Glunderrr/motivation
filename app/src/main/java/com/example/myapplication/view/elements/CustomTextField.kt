@@ -1,10 +1,14 @@
 package com.example.myapplication.view.elements
 
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.PathSegment
+import androidx.compose.ui.text.input.ImeAction
 import com.example.myapplication.ui.theme.textFieldColors
 
 @Composable
@@ -19,6 +23,9 @@ fun CustomTextField(
         value = value,
         colors = MaterialTheme.textFieldColors,
         onValueChange = { onChange(it) },
+        keyboardOptions = KeyboardOptions(
+            imeAction = ImeAction.Done
+        ),
         label = { Text(label) },
         modifier = modifier,
         supportingText = { Text(supportingText) }
@@ -36,6 +43,9 @@ fun CustomTextField(
         value = value,
         colors = MaterialTheme.textFieldColors,
         onValueChange = { onChange(it) },
+        keyboardOptions = KeyboardOptions(
+            imeAction = ImeAction.Done
+        ),
         label = { Text(label) },
         modifier = modifier,
     )
