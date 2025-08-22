@@ -24,7 +24,7 @@ class GlobalSortedParameters @Inject constructor() {
         _themes.value = _themes.value - listOf(theme)
     }
 
-    fun getPriorityMap(): Map<String, Int> {
+    private fun getPriorityMap(): Map<String, Int> {
         return _themes.value.mapIndexed { index, theme ->
             theme.themeName to index
         }.toMap()

@@ -4,14 +4,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.data.model.Phrase
 import com.example.myapplication.data.global_states.GlobalSortedParameters
-import com.example.myapplication.usecases.personal.GetAccount
+import com.example.myapplication.usecases.personal.GetPersonalData
 import com.example.myapplication.usecases.phrase.ChangePhraseLikedStatus
 import com.example.myapplication.usecases.phrase.DeletePhrases
 import com.example.myapplication.usecases.phrase.GetAllPhrases
 import com.example.myapplication.usecases.phrase.GetOwnPhrase
 import com.example.myapplication.usecases.theme.GetTheme
 import com.example.myapplication.usecases.utils.CopyPhraseToClipboard
-import com.example.myapplication.view.screens.bottom.favorite.FavUIAction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -25,7 +24,7 @@ import javax.inject.Inject
 class ProfileViewModel @Inject constructor(
     private val copyPhraseToClipboard: CopyPhraseToClipboard,
     private val getTheme: GetTheme,
-    private val getAccount: GetAccount,
+    private val getPersonalData: GetPersonalData,
     private val getAllPhrases: GetAllPhrases,
     private val deletePhrases: DeletePhrases,
     private val getOwnPhrase: GetOwnPhrase,

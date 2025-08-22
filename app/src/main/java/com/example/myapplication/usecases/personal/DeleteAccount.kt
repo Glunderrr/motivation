@@ -8,5 +8,5 @@ class DeleteAccount @Inject constructor(
     private val personalRepository: PersonalRepository
 ) {
     suspend fun invoke(account: Personal) =
-        personalRepository.deleteAccount(account)
+        personalRepository.deletePersonal(account)
 }

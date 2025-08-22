@@ -10,14 +10,14 @@ class PersonalRepositoryImpl @Inject constructor(
     private val dao: PersonalDao
 ) : PersonalRepository {
 
-    override suspend fun insertAccount(account: Personal) = dao.insertAccount(account)
+    override suspend fun insertPersonal(account: Personal) = dao.insertPersonal(account)
 
 
-    override suspend fun updateAccount(account: Personal) = dao.updateAccount(account)
+    override suspend fun updatePersonal(account: Personal) = dao.updatePersonal(account)
 
 
-    override suspend fun deleteAccount(account: Personal) = dao.deleteAccount(account)
+    override suspend fun deletePersonal(account: Personal) = dao.deletePersonal(account)
 
 
-    override fun getAccount(): Flow<Personal> = dao.getAccount()
+    override fun getPersonal(): Flow<Personal?> = dao.getPersonal()
 }

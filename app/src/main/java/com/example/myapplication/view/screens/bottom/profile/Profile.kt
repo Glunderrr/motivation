@@ -152,96 +152,94 @@ fun Profile(
                 )
             }
             stickyHeader {
-                if (uiState.selectedPhrases.isEmpty()) {
-                    val durationMillis = 100
-                    val isAllPhraseAnimationValue by animateFloatAsState(
-                        targetValue = if (uiState.isAllPhrase)
-                            1.5f else 1f,
-                        animationSpec = tween(
-                            durationMillis = durationMillis,
-                            delayMillis = 0,
-                            easing = { it })
-                    )
-                    val isOwnPhraseAnimationValue by animateFloatAsState(
-                        targetValue = if (uiState.isAllPhrase) 1f else 1.5f,
-                        animationSpec = tween(
-                            durationMillis = durationMillis,
-                            delayMillis = 0,
-                            easing = { it })
-                    )
-                    val primaryColor by animateColorAsState(
-                        if (uiState.isAllPhrase) MaterialTheme.colorScheme.onPrimary else
-                            MaterialTheme.colorScheme.primary,
-                        animationSpec = tween(
-                            durationMillis = durationMillis,
-                            delayMillis = 0,
-                            easing = { it })
-                    )
-                    val onPrimaryColor by animateColorAsState(
-                        if (!uiState.isAllPhrase) MaterialTheme.colorScheme.onPrimary else
-                            MaterialTheme.colorScheme.primary,
-                        animationSpec = tween(
-                            durationMillis = durationMillis,
-                            delayMillis = 0,
-                            easing = { it })
-                    )
+                val durationMillis = 100
+                val isAllPhraseAnimationValue by animateFloatAsState(
+                    targetValue = if (uiState.isAllPhrase)
+                        1.5f else 1f,
+                    animationSpec = tween(
+                        durationMillis = durationMillis,
+                        delayMillis = 0,
+                        easing = { it })
+                )
+                val isOwnPhraseAnimationValue by animateFloatAsState(
+                    targetValue = if (uiState.isAllPhrase) 1f else 1.5f,
+                    animationSpec = tween(
+                        durationMillis = durationMillis,
+                        delayMillis = 0,
+                        easing = { it })
+                )
+                val primaryColor by animateColorAsState(
+                    if (uiState.isAllPhrase) MaterialTheme.colorScheme.onPrimary else
+                        MaterialTheme.colorScheme.primary,
+                    animationSpec = tween(
+                        durationMillis = durationMillis,
+                        delayMillis = 0,
+                        easing = { it })
+                )
+                val onPrimaryColor by animateColorAsState(
+                    if (!uiState.isAllPhrase) MaterialTheme.colorScheme.onPrimary else
+                        MaterialTheme.colorScheme.primary,
+                    animationSpec = tween(
+                        durationMillis = durationMillis,
+                        delayMillis = 0,
+                        easing = { it })
+                )
 
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.background)
+                        .padding(vertical = Paddings.Small.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
                     Row(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .background(MaterialTheme.colorScheme.background)
-                            .padding(vertical = Paddings.Small.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center
+                            .border(
+                                border = BorderStroke(
+                                    2.dp,
+                                    MaterialTheme.colorScheme.primary
+                                ),
+                                shape = RoundedCornerShape(Paddings.Large.dp)
+                            )
                     ) {
-                        Row(
-                            modifier = Modifier
-                                .border(
-                                    border = BorderStroke(
-                                        2.dp,
-                                        MaterialTheme.colorScheme.primary
-                                    ),
-                                    shape = RoundedCornerShape(Paddings.Large.dp)
-                                )
+                        TextButton(
+                            onClick = { onAction(ProfUIAction.ChangeIsAllPhrase(true)) },
+                            modifier = Modifier.weight(isAllPhraseAnimationValue),
+                            colors = ButtonDefaults.textButtonColors(
+                                containerColor = onPrimaryColor,
+                                contentColor = primaryColor,
+                            ),
+                            shape = RoundedCornerShape(
+                                bottomStart = Paddings.Large.dp,
+                                topStart = Paddings.Large.dp,
+                                topEnd = 0.dp,
+                                bottomEnd = 0.dp,
+                            )
                         ) {
-                            TextButton(
-                                onClick = { onAction(ProfUIAction.ChangeIsAllPhrase(true)) },
-                                modifier = Modifier.weight(isAllPhraseAnimationValue),
-                                colors = ButtonDefaults.textButtonColors(
-                                    containerColor = onPrimaryColor,
-                                    contentColor = primaryColor,
-                                ),
-                                shape = RoundedCornerShape(
-                                    bottomStart = Paddings.Large.dp,
-                                    topStart = Paddings.Large.dp,
-                                    topEnd = 0.dp,
-                                    bottomEnd = 0.dp,
-                                )
-                            ) {
-                                Text(
-                                    stringResource(R.string.all_phrase),
-                                    fontSize = FontSize.Large.sp,
-                                )
-                            }
-                            TextButton(
-                                onClick = { onAction(ProfUIAction.ChangeIsAllPhrase(false)) },
-                                modifier = Modifier.weight(isOwnPhraseAnimationValue),
-                                colors = ButtonDefaults.textButtonColors(
-                                    containerColor = primaryColor,
-                                    contentColor = onPrimaryColor,
-                                ),
-                                shape = RoundedCornerShape(
-                                    bottomStart = 0.dp,
-                                    topStart = 0.dp,
-                                    topEnd = Paddings.Large.dp,
-                                    bottomEnd = Paddings.Large.dp,
-                                ),
-                            ) {
-                                Text(
-                                    stringResource(R.string.own_phrase),
-                                    fontSize = FontSize.Large.sp,
-                                )
-                            }
+                            Text(
+                                stringResource(R.string.all_phrase),
+                                fontSize = FontSize.Large.sp,
+                            )
+                        }
+                        TextButton(
+                            onClick = { onAction(ProfUIAction.ChangeIsAllPhrase(false)) },
+                            modifier = Modifier.weight(isOwnPhraseAnimationValue),
+                            colors = ButtonDefaults.textButtonColors(
+                                containerColor = primaryColor,
+                                contentColor = onPrimaryColor,
+                            ),
+                            shape = RoundedCornerShape(
+                                bottomStart = 0.dp,
+                                topStart = 0.dp,
+                                topEnd = Paddings.Large.dp,
+                                bottomEnd = Paddings.Large.dp,
+                            ),
+                        ) {
+                            Text(
+                                stringResource(R.string.own_phrase),
+                                fontSize = FontSize.Large.sp,
+                            )
                         }
                     }
                 }

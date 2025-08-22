@@ -2,8 +2,9 @@ package com.example.myapplication.view.screens.bottom.add
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.myapplication.data.global_states.UserParametersState
 import com.example.myapplication.data.model.Phrase
-import com.example.myapplication.usecases.phrase.GeneratePhraseByTheme
+import com.example.myapplication.usecases.phrase.GeneratePhrase
 import com.example.myapplication.usecases.phrase.UpsertPhrase
 import com.example.myapplication.usecases.theme.GetTheme
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,7 +19,8 @@ import kotlinx.coroutines.launch
 class AddViewModel @Inject constructor(
     private val themeUseCase: GetTheme,
     private val upsertPhraseUseCase: UpsertPhrase,
-    private val generatePhraseByThemeUseCase: GeneratePhraseByTheme
+    private val generatePhraseUseCase: GeneratePhrase,
+    private val userParametersState: UserParametersState
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(AddUIState())
@@ -41,7 +43,10 @@ class AddViewModel @Inject constructor(
             is AddUIAction.GeneratePhrase -> {
                 viewModelScope.launch {
                     val newPhrase =
-                        generatePhraseByThemeUseCase.invoke(_uiState.value.phrase.theme)
+                        generatePhraseUseCase.invoke(
+                            _uiState.value.phrase.theme,
+                            userParametersState
+                        )
                     _uiState.update { it.copy(phrase = newPhrase) }
                 }
             }
@@ -126,7 +131,17 @@ class AddViewModel @Inject constructor(
                 }
             }
 
-            is AddUIAction.OnAboutProgramClick -> TODO()
+            is AddUIAction.OnAboutProgramClick -> {
+                _uiState.value.aboutProgramClickFun.invoke()
+            }
+
+            is AddUIAction.SetAboutProgramFun -> {
+                _uiState.update {
+                    it.copy(
+                        aboutProgramClickFun = action.aboutProgramFun
+                    )
+                }
+            }
         }
     }
 }

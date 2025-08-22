@@ -46,6 +46,7 @@ android {
     }
     kotlinOptions {
         jvmTarget = "11"
+        freeCompilerArgs = listOf("-XXLanguage:+PropertyParamAnnotationDefaultTargetMode")
     }
     buildFeatures {
         buildConfig = true
@@ -117,9 +118,9 @@ dependencies {
     //
     implementation(libs.androidx.navigation.ui)
 
-
-
     // Serialization libraries
     implementation(libs.kotlinx.serialization.core)
     implementation(libs.kotlinx.serialization.json)
+
+    implementation(kotlin("reflect"))
 }

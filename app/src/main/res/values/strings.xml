@@ -12,6 +12,59 @@
     <string name="pass_to_add_screen">перейдіть в додати</string>
     <string name="pass_to_create_phrase_screen">створіть свою першу фразу!</string>
     <string name="own_phrase_placeholder">Писати</string>
+    <string name="next">Далі</string>
+
+    SIGN UP:
+    <string name="sign_up_start_screen">Привіт\nмене звати Мотивчик!</string>
+    <string name="sign_up_first_screen">Заповніть свій профіль, щоб отримувати найкращі мотиваційні фрази!</string>
+    <string name="sign_up_second_screen">Продовжуйте заповнювати дані про себе :)</string>
+    <string name="sign_up_third_screen">Налаштуйте, якими ви хочете бачити ваші фрази!</string>
+    <string name="sign_up_last_screen">Ви успішно усе заповнили, молодці!</string>
+
+    <string name="enter_your_name">Ім\'я</string>
+
+    <string name="enter_your_age">Вік</string>
+    <string name="enter_your_age_dialog">Оберіть свій вік</string>
+
+    <string name="enter_your_gender">Стать</string>
+    <string name="enter_your_gender_dialog">Оберіть свою стать</string>
+
+    <string name="enter_your_region">Регіон</string>
+    <string name="enter_your_region_dialog">Оберіть свій регіон</string>
+
+    <string name="enter_your_personality">Тип особистості</string>
+    <string name="enter_your_personality_dialog">Оберіть свій тип особистості</string>
+
+    <string name="enter_your_emotional_state">Емоційний стан</string>
+    <string name="enter_your_emotional_state_dialog">Вкажіть свій теперішній настрій</string>
+
+    <string name="enter_your_values">Цінності</string>
+    <string name="enter_your_values_dialog">Оберіть те, що для вас найважливіше</string>
+
+    <string name="enter_your_main_goal">Головна ціль</string>
+    <string name="enter_your_main_goal_description">Чітко опишіть свою основну ціль у житті</string>
+
+    <string name="enter_your_field">Сфера діяльності</string>
+    <string name="enter_your_field_dialog">Оберіть те, чим ви займаєтесь</string>
+
+    <string name="enter_your_challenges">Виклики</string>
+    <string name="enter_your_challenges_dialog">З якими труднощами ви стикаєтесь</string>
+
+    <string name="enter_your_experience_level">Рівень досвіду</string>
+    <string name="enter_your_experience_level_dialog">Оберіть свій рівень досвіду</string>
+
+    <string name="enter_your_tone">Тон</string>
+    <string name="enter_your_tone_dialog">Оберіть тон повідомлення</string>
+
+    <string name="enter_your_format">Формат</string>
+    <string name="enter_your_format_dialog">Оберіть формат повідомлення</string>
+
+    <string name="enter_your_max_length">Максимальна довжина</string>
+    <string name="enter_your_max_length_dialog">Вкажіть максимальну довжину повідомлення</string>
+
+    <string name="ok">Ок</string>
+    <string name="cancel">Скасувати</string>
+
 
     ROUTES:
     <string name="add">Додати</string>
@@ -24,4 +77,159 @@
     <string name="drawer_create_own">Створити власну</string>
     <string name="drawer_about_program">Про програму</string>
 
+    Gender:
+    <string name="male">"Чоловік"</string>
+    <string name="female">"Жінка"</string>
+    <string name="other">"Інше"</string>
+    <string name="not_specified">" Не хочу вказувати"</string>
+
+    Regions:
+    <string name="polissia">Полісся</string>
+    <string name="volyn">Волинь</string>
+    <string name="podillia">Поділля</string>
+    <string name="halychyna">Галичина</string>
+    <string name="bukovyna">Буковина</string>
+    <string name="zakarpattia">Закарпаття</string>
+    <string name="slobozhanshchyna">Слобожанщина</string>
+    <string name="donbas">Донбас</string>
+    <string name="zaporizhzhia">Запорожжя</string>
+    <string name="tavriya">Таврія</string>
+    <string name="naddnipryanshchyna">Наддніпрянщина</string>
+    <string name="prychornomorya">Причорномор’я</string>
+    <string name="not_specified_region">Не хочу вказувати</string>
+
+    PERSONALITY:
+    <string name="extroverted">Екстравертований</string>
+    <string name="introverted">Інтровертований</string>
+    <string name="optimistic">Оптимістичний</string>
+    <string name="pessimistic">Песимістичний</string>
+    <string name="ambitious">Амбітний</string>
+    <string name="laid_back">Спокійний</string>
+    <string name="analytical">Аналітичний</string>
+    <string name="emotional">Емоційний</string>
+    <string name="practical">Практичний</string>
+    <string name="charismatic">Харизматичний</string>
+    <string name="adventurous">Авантюрний</string>
+    <string name="loyal">Вірний</string>
+    <string name="independent">Незалежний</string>
+
+
+    EMOTIONAL STATE:
+    <string name="joy">Радість</string>
+    <string name="euphoria">Ейфорія</string>
+    <string name="inspiration">Натхнення</string>
+    <string name="admiration">Захоплення</string>
+    <string name="confidence">Впевненість</string>
+    <string name="calm">Спокій</string>
+    <string name="satisfaction">Задоволення</string>
+    <string name="gratitude">Вдячність</string>
+    <string name="harmony">Гармонія</string>
+    <string name="interest">Зацікавленість</string>
+    <string name="surprise">Подив</string>
+    <string name="anticipation">Очікування</string>
+    <string name="focus">Зосередженість</string>
+    <string name="indifference">Байдужість</string>
+    <string name="reflection">Роздуми</string>
+    <string name="tiredness">Втома</string>
+    <string name="nostalgia">Ностальгія</string>
+    <string name="anger">Злість</string>
+    <string name="irritation">Роздратування</string>
+    <string name="anxiety">Тривога</string>
+    <string name="fear">Страх</string>
+    <string name="sadness">Сум</string>
+    <string name="loneliness">Самотність</string>
+    <string name="apathy">Апатія</string>
+    <string name="hopelessness">Безнадія</string>
+
+    VALUES:
+    <string name="love">Любов</string>
+    <string name="friendship">Дружба</string>
+    <string name="family">Сім’я</string>
+    <string name="trust">Довіра</string>
+    <string name="honesty">Чесність</string>
+    <string name="justice">Справедливість</string>
+    <string name="dignity">Гідність</string>
+    <string name="loyalty">Вірність</string>
+    <string name="mercy">Милосердя</string>
+    <string name="compassion">Співчуття</string>
+    <string name="respect">Повага</string>
+    <string name="responsibility">Відповідальність</string>
+    <string name="freedom">Свобода</string>
+    <string name="equality">Рівність</string>
+    <string name="integrity">Порядність</string>
+    <string name="kindness">Доброзичливість</string>
+    <string name="tolerance">Терпимість</string>
+    <string name="sincerity">Щирість</string>
+    <string name="solidarity">Солідарність</string>
+    <string name="mutual_aid">Взаємодопомога</string>
+    <string name="security">Безпека</string>
+    <string name="health">Здоров’я</string>
+    <string name="work">Праця</string>
+    <string name="self_realization">Розвиток / Самореалізація</string>
+    <string name="beauty">Краса / Естетика</string>
+    <string name="wisdom">Мудрість</string>
+    <string name="faith">Віра / Духовність</string>
+
+    FIELDS:
+    <string name="science">Наука та дослідження</string>
+    <string name="education">Освіта і виховання</string>
+    <string name="medicine">Медицина і охорона здоров’я</string>
+    <string name="technology">Технології та ІТ</string>
+    <string name="industry">Промисловість і виробництво</string>
+    <string name="agriculture">Сільське господарство</string>
+    <string name="transport">Транспорт і логістика</string>
+    <string name="business">Бізнес і підприємництво</string>
+    <string name="art">Мистецтво і культура</string>
+    <string name="media">Засоби масової інформації і комунікації</string>
+    <string name="law">Право та юриспруденція</string>
+    <string name="politics">Політика і державне управління</string>
+    <string name="social">Соціальна сфера і волонтерство</string>
+    <string name="sports">Спорт і фізична активність</string>
+    <string name="military">Військова справа і безпека</string>
+    <string name="tourism">Туризм і готельно-ресторанна справа</string>
+    <string name="design">Дизайн і мода</string>
+    <string name="ecology">Екологія і природоохоронна діяльність</string>
+    <string name="religion">Релігія і духовність</string>
+    <string name="household">Домашнє господарство і побут</string>
+
+    CHALLENGES:
+    <string name="lack_of_time">Брак часу</string>
+    <string name="high_workload">Високе навантаження</string>
+    <string name="fear_of_starting">Страх почати</string>
+    <string name="stress">Стрес</string>
+    <string name="financial_limits">Фінансові обмеження</string>
+    <string name="low_motivation">Низька мотивація</string>
+    <string name="procrastination">Прокрастинація</string>
+    <string name="uncertain_goals">Невизначеність цілей</string>
+    <string name="fatigue">Втома / виснаження</string>
+    <string name="conflicts">Конфлікти з оточенням</string>
+    <string name="lack_of_support">Брак підтримки</string>
+    <string name="insufficient_education">Недостатня освіта</string>
+    <string name="lack_of_resources">Відсутність ресурсів</string>
+    <string name="career_obstacles">Перешкоди у кар’єрі</string>
+    <string name="technical_issues">Технічні проблеми</string>
+    <string name="health_issues">Нестача здоров’я</string>
+    <string name="emotional_challenges">Емоційні труднощі</string>
+    <string name="social_isolation">Соціальна ізоляція</string>
+
+    EXPERIENCE_LEVEL:
+    <string name="beginner">Новачок</string>
+    <string name="junior">Початковий</string>
+    <string name="intermediate">Середній</string>
+    <string name="experienced">Досвідчений</string>
+    <string name="expert">Експерт</string>
+    <string name="master">Майстер</string>
+
+    TONES:
+    <string name="friendly">Дружній</string>
+    <string name="formal">Формальний</string>
+    <string name="humorous">Гумористичний</string>
+    <string name="serious">Серйозний</string>
+    <string name="inspiring">Натхненний</string>
+
+    FORMATS:
+    <string name="text">Текст</string>
+    <string name="sentence">Речення</string>
+    <string name="paragraph">Абзац</string>
+    <string name="quote">Цитата</string>
 </resources>

@@ -5,9 +5,9 @@ import com.example.myapplication.repository.interfaces.PersonalRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class GetAccount @Inject constructor(
+class GetPersonalData @Inject constructor(
     private val personalRepository: PersonalRepository
 ) {
-    suspend fun invoke(): Flow<Personal> =
-        personalRepository.getAccount()
+    fun invoke(): Flow<Personal?> =
+        personalRepository.getPersonal()
 }

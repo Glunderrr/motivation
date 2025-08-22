@@ -29,7 +29,6 @@ sealed class AddUIAction {
         val value: Boolean
     ) : AddUIAction()
 
-    object OnAboutProgramClick : AddUIAction()
 
     data class ChangeSelectedDrawerElement(
         val element: DrawerElement
@@ -42,4 +41,7 @@ sealed class AddUIAction {
     data class SetPhraseToEdit(
         val phrase: Phrase
     ) : AddUIAction()
+
+    data object OnAboutProgramClick : AddUIAction()
+    data class SetAboutProgramFun(val aboutProgramFun: () -> Unit) : AddUIAction()
 }

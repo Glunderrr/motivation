@@ -10,13 +10,23 @@ import com.example.myapplication.data.room.daos.PersonalDao
 import com.example.myapplication.data.room.daos.PhraseDao
 import com.example.myapplication.data.room.daos.ThemeDao
 
+import androidx.room.DeleteColumn
+import androidx.room.migration.AutoMigrationSpec
+
+@DeleteColumn.Entries(
+    DeleteColumn(tableName = "personal", columnName = "status"),
+    DeleteColumn(tableName = "personal", columnName = "image")
+)
+class PersonalMigrationSpec : AutoMigrationSpec
+
 @Database(
-    version = 3,
+    version = 4,
     entities = [Theme::class, Phrase::class, Personal::class],
     autoMigrations = [
         AutoMigration(
-            from = 2,
-            to = 3,
+            from = 3,
+            to = 4,
+            spec = PersonalMigrationSpec::class
         )
     ],
     exportSchema = true

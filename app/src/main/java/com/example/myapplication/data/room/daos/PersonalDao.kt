@@ -11,14 +11,14 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface PersonalDao {
     @Insert
-    suspend fun insertAccount(account: Personal)
+    suspend fun insertPersonal(account: Personal)
 
     @Update
-    suspend fun updateAccount(account: Personal)
+    suspend fun updatePersonal(account: Personal)
 
     @Delete
-    suspend fun deleteAccount(account: Personal)
+    suspend fun deletePersonal(account: Personal)
 
-    @Query("SELECT * FROM personal ORDER BY id DESC")
-    fun getAccount(): Flow<Personal>
+    @Query("SELECT * FROM personal ORDER BY id DESC LIMIT 1")
+    fun getPersonal(): Flow<Personal?>
 }

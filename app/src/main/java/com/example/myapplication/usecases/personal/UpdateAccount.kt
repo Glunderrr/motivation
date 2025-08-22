@@ -8,5 +8,5 @@ class UpdateAccount @Inject constructor(
     private val personalRepository: PersonalRepository
 ) {
     suspend fun invoke(account: Personal) =
-        personalRepository.updateAccount(account)
+        personalRepository.updatePersonal(account)
 }

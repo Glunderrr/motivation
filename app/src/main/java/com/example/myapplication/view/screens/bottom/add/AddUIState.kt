@@ -11,4 +11,5 @@ data class AddUIState(
     val phrase: Phrase = Phrase(),
     val showDrawerSheet: Boolean = false,
     val selectedDrawerElement: DrawerElement = DrawerElement.Generate,
+    val aboutProgramClickFun: () -> Unit = {}
 )

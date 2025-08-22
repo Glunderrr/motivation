@@ -7,5 +7,5 @@ class InsertAccount @Inject constructor(
     private val personalRepository: PersonalRepository
 ) {
     suspend fun invoke(account: com.example.myapplication.data.model.Personal) =
-        personalRepository.insertAccount(account)
+        personalRepository.insertPersonal(account)
 }
