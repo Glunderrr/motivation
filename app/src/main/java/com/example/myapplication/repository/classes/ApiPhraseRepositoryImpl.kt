@@ -30,7 +30,7 @@ class ApiPhraseRepositoryImpl @Inject constructor(
                             User profile:
                             Age: ${userParam.personalState.value.age}, Gender: ${userParam.personalState.value.gender}, Region: ${userParam.personalState.value.region}
                             Personality: ${userParam.personalState.value.personality}, Emotional state: ${userParam.personalState.value.emotionalState}, Values: ${userParam.personalState.value.userValues}
-                            Goal: ${userParam.personalState.value.mainGoal}, Field: ${userParam.personalState.value.field}, Challenges: ${userParam.personalState.value.challenges}, Experience: ${userParam.personalState.value.experienceLevel}
+                            Goal: ${userParam.personalState.value.mainGoal}, Field: ${userParam.personalState.value.field}, Challenges: ${userParam.personalState.value.challenges}, Experience in fields: ${userParam.personalState.value.experienceLevel}
 
                             Tone: ${userParam.personalState.value.tone}, Format: ${userParam.personalState.value.format}, Max length: ${userParam.personalState.value.maxLength} words, Address user: ${userParam.personalState.value.addressUser}
 

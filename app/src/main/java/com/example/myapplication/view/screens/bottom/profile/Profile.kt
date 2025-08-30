@@ -357,7 +357,6 @@ private fun CustomListPage(
         }
 }
 
-@SuppressLint("UnusedContentLambdaTargetStateParameter")
 @Composable
 private fun UserEditData(
     modifier: Modifier = Modifier,

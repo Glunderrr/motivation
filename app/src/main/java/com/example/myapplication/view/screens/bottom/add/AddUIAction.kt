@@ -21,10 +21,6 @@ sealed class AddUIAction {
         val theme: String
     ) : AddUIAction()
 
-    data class IsLoading(
-        val value: Boolean
-    ) : AddUIAction()
-
     data class ShowDrawerSheet(
         val value: Boolean
     ) : AddUIAction()

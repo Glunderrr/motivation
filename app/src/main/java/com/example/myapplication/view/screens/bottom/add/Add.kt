@@ -1,5 +1,6 @@
 package com.example.myapplication.view.screens.bottom.add
 
+import android.util.Log
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -58,7 +59,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.myapplication.R
-import com.example.myapplication.data.model.Phrase
 import com.example.myapplication.ui.theme.Paddings
 import com.example.myapplication.view.elements.ChooseThemeButton
 import com.example.myapplication.view.elements.PhraseCard
@@ -218,7 +218,9 @@ private fun DrawerContent(
 
 @Composable
 private fun GenerateScreenContent(
-    modifier: Modifier = Modifier, uiState: AddUIState, onAction: (AddUIAction) -> Unit
+    modifier: Modifier = Modifier,
+    uiState: AddUIState,
+    onAction: (AddUIAction) -> Unit
 ) {
     Column(
         modifier = modifier.fillMaxSize(),
@@ -247,13 +249,6 @@ private fun GenerateScreenContent(
         }
         Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.TopCenter) {
             val size = 200.dp
-            LaunchedEffect(uiState.isLoading) {
-                if (uiState.isLoading) {
-                    delay(1440)
-                    onAction(AddUIAction.IsLoading(false))
-                    onAction(AddUIAction.OpenPhraseDialog)
-                }
-            }
             if (uiState.isLoading) {
                 CircularProgressIndicator(
                     modifier = Modifier.size(size),
@@ -271,7 +266,6 @@ private fun GenerateScreenContent(
                     modifier = Modifier.size(size),
                     onClick = {
                         onAction(AddUIAction.GeneratePhrase)
-                        onAction(AddUIAction.IsLoading(true))
                     },
                 ) {
                     Icon(
@@ -293,7 +287,7 @@ private fun ShowNewPhrase(
     var showLikeAnimation by remember {
         mutableStateOf(false)
     }
-    if (uiState.openPhraseDialog && uiState.phrase.phrase.isNotBlank() ) {
+    if (uiState.openPhraseDialog && uiState.phrase.phrase.isNotBlank()) {
         Dialog(
             onDismissRequest = {
                 onAction(AddUIAction.ClosePhraseDialog)

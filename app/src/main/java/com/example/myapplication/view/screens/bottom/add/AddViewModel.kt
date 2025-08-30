@@ -42,12 +42,15 @@ class AddViewModel @Inject constructor(
         when (action) {
             is AddUIAction.GeneratePhrase -> {
                 viewModelScope.launch {
+                    _uiState.update { it.copy(isLoading = true) }
                     val newPhrase =
                         generatePhraseUseCase.invoke(
                             _uiState.value.phrase.theme,
                             userParametersState
                         )
-                    _uiState.update { it.copy(phrase = newPhrase) }
+                    _uiState.update { it.copy(phrase = newPhrase, isLoading = false) }
+                    if (!_uiState.value.isLoading)
+                        onAction(AddUIAction.OpenPhraseDialog)
                 }
             }
 
@@ -65,7 +68,7 @@ class AddViewModel @Inject constructor(
             }
 
             is AddUIAction.ClosePhraseDialog -> {
-                _uiState.update { it.copy(openPhraseDialog = false) }
+                _uiState.update { it.copy(openPhraseDialog = false, phrase = Phrase()) }
             }
 
             is AddUIAction.SelectTheme -> {
@@ -78,9 +81,6 @@ class AddViewModel @Inject constructor(
                 }
             }
 
-            is AddUIAction.IsLoading -> {
-                _uiState.update { it.copy(isLoading = action.value) }
-            }
 
             is AddUIAction.ChangeLikedStatusOfNewPhrase -> {
                 _uiState.update { it.copy(phrase = it.phrase.copy(isLiked = !it.phrase.isLiked)) }
