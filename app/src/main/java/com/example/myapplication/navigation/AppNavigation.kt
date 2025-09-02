@@ -2,6 +2,7 @@ package com.example.myapplication.navigation
 
 import Transition
 import Transition.TransitionDirection
+import android.util.Log
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
@@ -58,7 +59,7 @@ fun AppNavigation(
             onSave = userParam::savePersonalData
         )
     } else {
-        val backStack = rememberNavBackStack<Routes>(Routes.Profile)
+        val backStack = BackstackWrapper(rememberNavBackStack<Routes>(Routes.Profile))
         val bottomItems = listOf(
             Routes.Add(),
             Routes.Favorites,
@@ -66,8 +67,11 @@ fun AppNavigation(
         )
         var selectedIndex by remember { mutableIntStateOf(bottomItems.indexOf(Routes.Profile)) }
         LaunchedEffect(backStack.last()) {
-            selectedIndex =
-                bottomItems.map { it::class.java.name }.indexOf(backStack.last()::class.java.name)
+            selectedIndex = bottomItems.indexOf(backStack.last())
+            Log.d(
+                "AppNavigation",
+                "BackStack: ${backStack.value}"
+            )
         }
 
         Scaffold(
@@ -88,17 +92,17 @@ fun AppNavigation(
                     .background(MaterialTheme.colorScheme.background)
                     .padding(innerPadding)
                     .fillMaxSize(),
-                backStack = backStack,
+                backStack = backStack.value,
                 entryDecorators = listOf(
                     rememberSavedStateNavEntryDecorator(),
                     rememberViewModelStoreNavEntryDecorator(),
                     rememberSceneSetupNavEntryDecorator()
                 ),
                 onBack = {
-                    backStack.removeLastOrNull()
+                    backStack.onBack()
                 },
                 transitionSpec = {
-                    val from = backStack.getOrNull(backStack.lastIndex - 1)
+                    val from = backStack.getPreviousRoute()
                     val to = backStack.last()
 
                     val fromIndex = from?.let { bottomItems.indexOf(it) } ?: -1
