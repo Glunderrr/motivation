@@ -70,6 +70,10 @@ fun AppNavigation(
         var selectedIndex by remember { mutableIntStateOf(bottomItems.indexOf(Routes.Profile)) }
         LaunchedEffect(backStack.last()) {
             selectedIndex = bottomItems.indexOf(backStack.last())
+            Log.d(
+                "AppNavigation",
+                "backStack size: ${backStack.value.size}"
+            )
         }
 
         Scaffold(

@@ -15,10 +15,10 @@ class BackstackWrapper(
 
 
     fun add(key: NavKey) {
-        if (value.contains(key))
-            value.remove(key)
         if (key == Routes.Profile)
             value.clear()
+        else if (value.contains(key))
+            value.remove(key)
         value.add(key)
     }
 
