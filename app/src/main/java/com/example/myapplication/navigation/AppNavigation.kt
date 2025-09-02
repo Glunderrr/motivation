@@ -3,6 +3,8 @@ package com.example.myapplication.navigation
 import Transition
 import Transition.TransitionDirection
 import android.util.Log
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.togetherWith
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
@@ -68,10 +70,6 @@ fun AppNavigation(
         var selectedIndex by remember { mutableIntStateOf(bottomItems.indexOf(Routes.Profile)) }
         LaunchedEffect(backStack.last()) {
             selectedIndex = bottomItems.indexOf(backStack.last())
-            Log.d(
-                "AppNavigation",
-                "BackStack: ${backStack.value}"
-            )
         }
 
         Scaffold(
@@ -113,9 +111,11 @@ fun AppNavigation(
                         toIndex < fromIndex -> TransitionDirection.RIGHT_TO_LEFT
                         else -> error("Invalid route transition from $from to $to")
                     }
-
                     Transition.create(direction).invoke(this@NavDisplay)
 
+                },
+                popTransitionSpec = {
+                    Transition.create(TransitionDirection.LEFT_TO_RIGHT).invoke(this@NavDisplay)
                 },
                 entryProvider = { key ->
                     when (key) {
