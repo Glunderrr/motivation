@@ -1,5 +1,6 @@
 package com.example.myapplication.view.screens.bottom.profile
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.data.model.Phrase
@@ -129,7 +130,12 @@ class ProfileViewModel @Inject constructor(
             }
 
             is ProfUIAction.SetPersonalData -> {
-                userParam.updateFieldByKey(action.key, action.value)
+                userParam.updateFieldByKey(action.key, action.value).apply {
+                    Log.d(
+                        "ProfileViewModel",
+                        "SetPersonalData: key=${action.key}, value=${action.value}, personal=${userParam.personalState.value}"
+                    )
+                }
             }
 
             ProfUIAction.SavePersonalData -> {

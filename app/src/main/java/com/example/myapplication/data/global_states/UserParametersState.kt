@@ -1,5 +1,6 @@
 package com.example.myapplication.data.global_states
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -9,8 +10,10 @@ import com.example.myapplication.di.util.IOScope
 import com.example.myapplication.repository.interfaces.PersonalRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -35,7 +38,7 @@ class UserParametersState @Inject constructor(
     val personalState: StateFlow<Personal> = _state.asStateFlow()
 
 
-    fun launch() {
+    private fun launch() {
         scope.launch {
             personalRepository.getPersonal().collect { personal ->
                 personal?.let {
@@ -47,9 +50,8 @@ class UserParametersState @Inject constructor(
     }
 
     fun updateFieldByKey(key: String, value: Any?) {
-        val current = _state.value
-        val updated = current.setFieldByKey(key, value)
-        _state.value = updated
+        val current = _state.value.setFieldByKey(key, value)
+        _state.update { current }
     }
 
     fun savePersonalData() {

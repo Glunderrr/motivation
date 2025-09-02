@@ -1,11 +1,11 @@
 package com.example.myapplication.view.screens.bottom.profile
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.animateIntOffsetAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
@@ -25,7 +25,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CornerSize
@@ -47,11 +46,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.room.util.TableInfo
 import com.example.myapplication.R
 import com.example.myapplication.data.model.Personal
 import com.example.myapplication.data.model.Phrase
@@ -64,7 +62,6 @@ import com.example.myapplication.view.elements.MultiSelectTextField
 import com.example.myapplication.view.elements.PhraseCard
 import com.example.myapplication.view.elements.SelectTextField
 import com.example.myapplication.view.screens.bottom.add.DrawerElement
-import kotlin.math.roundToInt
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalLayoutApi::class, ExperimentalFoundationApi::class)
@@ -363,34 +360,31 @@ private fun UserEditData(
     personalState: Personal,
     onAction: (ProfUIAction) -> Unit
 ) {
-    var showDetails by rememberSaveable { mutableStateOf(false) }
-    val weight by animateFloatAsState(
-        if (showDetails) 1f else 0.5f
-    )
-    FlowRow(
+    var saveData by rememberSaveable { mutableStateOf(false) }
+
+    Column(
         Modifier
             .fillMaxWidth()
-            .padding(vertical = Paddings.ExtraLarge.dp)
+            .padding(vertical = Paddings.Large.dp)
             .background(MaterialTheme.colorScheme.background),
-        horizontalArrangement = Arrangement.Center,
-        verticalArrangement = Arrangement.spacedBy(Paddings.ExtraLarge.dp),
-        itemVerticalAlignment = Alignment.CenterVertically
+        verticalArrangement = Arrangement.spacedBy(Paddings.Large.dp),
     ) {
         Text(
             stringResource(R.string.personal_data),
             style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier.fillMaxWidth(weight)
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth()
         )
         Button(
             onClick = {
-                showDetails = !showDetails
-                if (!showDetails) onAction(ProfUIAction.SavePersonalData)
+                saveData = !saveData
+                if (!saveData) onAction(ProfUIAction.SavePersonalData)
             },
             modifier = Modifier
-                .fillMaxWidth(weight)
+                .fillMaxWidth()
         ) {
             Text(
-                text = if (!showDetails)
+                text = if (!saveData)
                     stringResource(R.string.change_details)
                 else
                     stringResource(R.string.save),
@@ -399,7 +393,7 @@ private fun UserEditData(
         }
     }
     AnimatedVisibility(
-        showDetails,
+        saveData,
         enter = slideInVertically()
                 + expandVertically(expandFrom = Alignment.Top)
                 + fadeIn(initialAlpha = 0.3f),
@@ -414,16 +408,18 @@ private fun UserEditData(
             CustomTextField(
                 value = personalState.name,
                 modifier = Modifier.fillMaxWidth(),
-                onChange = { onAction(ProfUIAction.SetPersonalData(Personal.NAME_KEY, it)) },
+                onChange = {
+                    onAction(ProfUIAction.SetPersonalData(Personal.NAME_KEY, it))
+                },
                 label = stringResource(R.string.enter_your_name),
             )
 
             SelectTextField(
                 modifier = Modifier.fillMaxWidth(),
-                value = if (personalState.age != 0)
-                    personalState.age.toString()
-                else "",
-                onAgeSelected = { ProfUIAction.SetPersonalData(Personal.AGE_KEY, it.toInt()) },
+                value = personalState.age.toString(),
+                onAgeSelected = {
+                    onAction(ProfUIAction.SetPersonalData(Personal.AGE_KEY, it))
+                },
                 label = stringResource(R.string.enter_your_age),
                 dialogLabel = stringResource(R.string.enter_your_age_dialog),
                 list = (12..100).map { it.toString() }
@@ -443,7 +439,9 @@ private fun UserEditData(
             SelectTextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = personalState.region,
-                onAgeSelected = { onAction(ProfUIAction.SetPersonalData(Personal.REGION_KEY, it)) },
+                onAgeSelected = {
+                    onAction(ProfUIAction.SetPersonalData(Personal.REGION_KEY, it))
+                },
                 label = stringResource(R.string.enter_your_region),
                 dialogLabel = stringResource(R.string.enter_your_region_dialog),
                 list = Personal.Region.entries.map { stringResource(it.valueId) }
@@ -453,12 +451,7 @@ private fun UserEditData(
                 modifier = Modifier.fillMaxWidth(),
                 value = personalState.personality,
                 onValueSelected = {
-                    onAction(
-                        ProfUIAction.SetPersonalData(
-                            Personal.PERSONALITY_KEY,
-                            it
-                        )
-                    )
+                    onAction(ProfUIAction.SetPersonalData(Personal.PERSONALITY_KEY, it))
                 },
                 label = stringResource(R.string.enter_your_personality),
                 dialogLabel = stringResource(R.string.enter_your_personality_dialog),
@@ -469,12 +462,7 @@ private fun UserEditData(
                 modifier = Modifier.fillMaxWidth(),
                 value = personalState.emotionalState,
                 onValueSelected = {
-                    onAction(
-                        ProfUIAction.SetPersonalData(
-                            Personal.EMOTIONAL_STATE_KEY,
-                            it
-                        )
-                    )
+                    onAction(ProfUIAction.SetPersonalData(Personal.EMOTIONAL_STATE_KEY, it))
                 },
                 label = stringResource(R.string.enter_your_emotional_state),
                 dialogLabel = stringResource(R.string.enter_your_emotional_state_dialog),
@@ -485,12 +473,7 @@ private fun UserEditData(
                 modifier = Modifier.fillMaxWidth(),
                 value = personalState.userValues,
                 onValueSelected = {
-                    onAction(
-                        ProfUIAction.SetPersonalData(
-                            Personal.USER_VALUES_KEY,
-                            it
-                        )
-                    )
+                    onAction(ProfUIAction.SetPersonalData(Personal.USER_VALUES_KEY, it))
                 },
                 label = stringResource(R.string.enter_your_values),
                 dialogLabel = stringResource(R.string.enter_your_values_dialog),
@@ -500,7 +483,9 @@ private fun UserEditData(
             CustomTextField(
                 value = personalState.mainGoal,
                 modifier = Modifier.fillMaxWidth(),
-                onChange = { onAction(ProfUIAction.SetPersonalData(Personal.MAIN_GOAL_KEY, it)) },
+                onChange = {
+                    onAction(ProfUIAction.SetPersonalData(Personal.MAIN_GOAL_KEY, it))
+                },
                 label = stringResource(R.string.enter_your_main_goal),
                 supportingText = stringResource(R.string.enter_your_main_goal_description)
             )
@@ -509,12 +494,7 @@ private fun UserEditData(
                 modifier = Modifier.fillMaxWidth(),
                 value = personalState.field,
                 onValueSelected = {
-                    onAction(
-                        ProfUIAction.SetPersonalData(
-                            Personal.FIELD_KEY,
-                            it
-                        )
-                    )
+                    onAction(ProfUIAction.SetPersonalData(Personal.FIELD_KEY, it))
                 },
                 label = stringResource(R.string.enter_your_field),
                 dialogLabel = stringResource(R.string.enter_your_field_dialog),
@@ -525,12 +505,7 @@ private fun UserEditData(
                 modifier = Modifier.fillMaxWidth(),
                 value = personalState.challenges,
                 onValueSelected = {
-                    onAction(
-                        ProfUIAction.SetPersonalData(
-                            Personal.CHALLENGES_KEY,
-                            it
-                        )
-                    )
+                    onAction(ProfUIAction.SetPersonalData(Personal.CHALLENGES_KEY, it))
                 },
                 label = stringResource(R.string.enter_your_challenges),
                 dialogLabel = stringResource(R.string.enter_your_challenges_dialog),
@@ -541,12 +516,7 @@ private fun UserEditData(
                 modifier = Modifier.fillMaxWidth(),
                 value = personalState.experienceLevel,
                 onAgeSelected = {
-                    onAction(
-                        ProfUIAction.SetPersonalData(
-                            Personal.EXPERIENCE_LEVEL_KEY,
-                            it
-                        )
-                    )
+                    onAction(ProfUIAction.SetPersonalData(Personal.EXPERIENCE_LEVEL_KEY, it))
                 },
                 label = stringResource(R.string.enter_your_experience_level),
                 dialogLabel = stringResource(R.string.enter_your_experience_level_dialog),
@@ -556,7 +526,9 @@ private fun UserEditData(
             SelectTextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = personalState.tone,
-                onAgeSelected = { onAction(ProfUIAction.SetPersonalData(Personal.TONE_KEY, it)) },
+                onAgeSelected = {
+                    onAction(ProfUIAction.SetPersonalData(Personal.TONE_KEY, it))
+                },
                 label = stringResource(R.string.enter_your_tone),
                 dialogLabel = stringResource(R.string.enter_your_tone_dialog),
                 list = Personal.Tone.entries.map { stringResource(it.valueId) }
@@ -565,7 +537,9 @@ private fun UserEditData(
             SelectTextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = personalState.format,
-                onAgeSelected = { onAction(ProfUIAction.SetPersonalData(Personal.FORMAT_KEY, it)) },
+                onAgeSelected = {
+                    onAction(ProfUIAction.SetPersonalData(Personal.FORMAT_KEY, it))
+                },
                 label = stringResource(R.string.enter_your_format),
                 dialogLabel = stringResource(R.string.enter_your_format_dialog),
                 list = Personal.Format.entries.map { stringResource(it.valueId) }
@@ -573,16 +547,9 @@ private fun UserEditData(
 
             SelectTextField(
                 modifier = Modifier.fillMaxWidth(),
-                value = if (personalState.maxLength != 0)
-                    personalState.maxLength.toString()
-                else "",
+                value = personalState.maxLength.toString(),
                 onAgeSelected = {
-                    onAction(
-                        ProfUIAction.SetPersonalData(
-                            Personal.MAX_LENGTH_KEY,
-                            it
-                        )
-                    )
+                    onAction(ProfUIAction.SetPersonalData(Personal.MAX_LENGTH_KEY, it))
                 },
                 label = stringResource(R.string.enter_your_max_length),
                 dialogLabel = stringResource(R.string.enter_your_max_length_dialog),

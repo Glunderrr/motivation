@@ -14,7 +14,7 @@ data class Personal(
     val name: String = "",
 
     @ColumnInfo(defaultValue = "0")
-    @BindKey(key = AGE_KEY) val age: Int = 0,
+    @BindKey(AGE_KEY) val age: Int = 0,
 
     @ColumnInfo(defaultValue = "")
     @BindKey(GENDER_KEY) val gender: String = "",

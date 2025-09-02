@@ -228,7 +228,7 @@ fun FirstScreen(
                 value = if (personalState.value.age != 0)
                     personalState.value.age.toString()
                 else "",
-                onAgeSelected = { onChangeByKey(Personal.AGE_KEY, it.toInt()) },
+                onAgeSelected = { onChangeByKey(Personal.AGE_KEY, it) },
                 label = stringResource(R.string.enter_your_age),
                 dialogLabel = stringResource(R.string.enter_your_age_dialog),
                 list = (12..100).map { it.toString() }
@@ -433,7 +433,7 @@ fun ThirdScreen(
                 value = if (personalState.value.maxLength != 0)
                     personalState.value.maxLength.toString()
                 else "",
-                onAgeSelected = { onChangeByKey(Personal.MAX_LENGTH_KEY, it.toInt()) },
+                onAgeSelected = { onChangeByKey(Personal.MAX_LENGTH_KEY, it) },
                 label = stringResource(R.string.enter_your_max_length),
                 dialogLabel = stringResource(R.string.enter_your_max_length_dialog),
                 list = (10..60).map { it.toString() }
