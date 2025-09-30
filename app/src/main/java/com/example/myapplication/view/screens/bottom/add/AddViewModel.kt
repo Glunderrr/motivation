@@ -1,5 +1,7 @@
 package com.example.myapplication.view.screens.bottom.add
 
+import android.util.Log
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.data.global_states.UserParametersState
@@ -27,6 +29,7 @@ class AddViewModel @Inject constructor(
     val uiState: StateFlow<AddUIState> = _uiState.asStateFlow()
 
     init {
+        Log.d("AddViewModel", "init")
         viewModelScope.launch {
             themeUseCase.invoke().collect { themes ->
                 _uiState.update { state ->
@@ -36,6 +39,11 @@ class AddViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    override fun onCleared() {
+        Log.d("AddViewModel", "onCleared")
+        super.onCleared()
     }
 
     fun onAction(action: AddUIAction) {

@@ -16,9 +16,4 @@ sealed class DrawerElement(
         route = "create_own",
         titleId = R.string.drawer_create_own,
     )
-
-    object AboutProgram : DrawerElement(
-        route = "about_program",
-        titleId = R.string.drawer_about_program,
-    )
 }

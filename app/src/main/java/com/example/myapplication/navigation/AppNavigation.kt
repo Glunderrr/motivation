@@ -25,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 
 import androidx.navigation3.runtime.NavEntry
@@ -124,9 +125,10 @@ fun AppNavigation(
                 entryProvider = { key ->
                     when (key) {
                         is Routes.Add -> NavEntry(key) {
+                            Log.d("Routes.Add",it.toString()+"\n"+it::class)
                             val viewModel = hiltViewModel<AddViewModel>()
                             val onAction = viewModel::onAction
-                            val state by viewModel.uiState.collectAsState()
+                            val state by viewModel.uiState.collectAsStateWithLifecycle()
                             LaunchedEffect(true) {
                                 onAction(
                                     AddUIAction.ChangeSelectedDrawerElement(
