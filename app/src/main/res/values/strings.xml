@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">Мотивчик</string>
     <string name="status">Статус: </string>
     <string name="themes">Теми</string>
     <string name="select_theme">Оберіть тему</string>

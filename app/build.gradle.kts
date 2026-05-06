@@ -110,7 +110,6 @@ dependencies {
 
     //navigation
     implementation(libs.navigation.compose)
-    implementation(libs.kotlinx.serialization.json)
 
     implementation(libs.androidx.navigation3.ui)
     implementation(libs.androidx.navigation3.runtime)
@@ -122,6 +121,10 @@ dependencies {
     // Serialization libraries
     implementation(libs.kotlinx.serialization.core)
     implementation(libs.kotlinx.serialization.json)
+
+    //Data store
+    implementation(libs.androidx.datastore)
+
 
     implementation(kotlin("reflect"))
 }

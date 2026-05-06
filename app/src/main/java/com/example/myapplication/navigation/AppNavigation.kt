@@ -17,7 +17,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -57,7 +56,7 @@ fun AppNavigation(
             modifier = modifier
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.background),
-            personalState = userParam.personalState.collectAsState(),
+            personalState = userParam.personalState.collectAsStateWithLifecycle(),
             onChangeByKey = userParam::updateFieldByKey,
             onSave = userParam::savePersonalData
         )
@@ -125,7 +124,7 @@ fun AppNavigation(
                 entryProvider = { key ->
                     when (key) {
                         is Routes.Add -> NavEntry(key) {
-                            Log.d("Routes.Add",it.toString()+"\n"+it::class)
+                            Log.d("Routes.Add", it.toString() + "\n" + it::class)
                             val viewModel = hiltViewModel<AddViewModel>()
                             val onAction = viewModel::onAction
                             val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -153,7 +152,7 @@ fun AppNavigation(
                         is Routes.Favorites -> NavEntry(key) {
                             val viewModel = hiltViewModel<FavViewModel>()
                             val onAction = viewModel::onAction
-                            val state by viewModel.uiState.collectAsState()
+                            val state by viewModel.uiState.collectAsStateWithLifecycle()
                             onAction(
                                 FavUIAction.SetNavigateFun { selectedDrawerElement, phrase ->
                                     backStack.add(
@@ -175,8 +174,8 @@ fun AppNavigation(
 
                         is Routes.Profile -> NavEntry(key) {
                             val viewModel = hiltViewModel<ProfileViewModel>()
-                            val state by viewModel.uiState.collectAsState()
-                            val personalState by userParam.personalState.collectAsState()
+                            val state by viewModel.uiState.collectAsStateWithLifecycle()
+                            val personalState by userParam.personalState.collectAsStateWithLifecycle()
                             val onAction = viewModel::onAction
 
                             onAction(
