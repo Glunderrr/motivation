@@ -26,7 +26,7 @@ class ThemeState @Inject constructor(
     }
 
     // null = follow system, false = force light, true = force dark
-    private val _isDarkTheme = MutableStateFlow<Boolean?>(null)
+    private val _isDarkTheme = MutableStateFlow<Boolean?>(false)
     val isDarkTheme: StateFlow<Boolean?> = _isDarkTheme.asStateFlow()
 
     init {
@@ -35,7 +35,8 @@ class ThemeState @Inject constructor(
                 _isDarkTheme.value = when (prefs[THEME_MODE_KEY]) {
                     LIGHT -> false
                     DARK -> true
-                    else -> null
+                    SYSTEM -> null
+                    else -> false  // перший запуск — світла тема
                 }
             }
         }
