@@ -72,6 +72,12 @@
     <string name="cancel">Скасувати</string>
 
 
+    APPEARANCE:
+    <string name="appearance">Вигляд</string>
+    <string name="theme_system">Системна</string>
+    <string name="theme_light">Світла</string>
+    <string name="theme_dark">Темна</string>
+
     ROUTES:
     <string name="add">Додати</string>
     <string name="favorites">Улюблені</string>

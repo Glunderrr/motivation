@@ -12,8 +12,8 @@ import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.ui.graphics.Color
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -95,11 +95,7 @@ private fun AgePickerDialog(
         },
         title = { Text(label) },
         text = {
-            LazyColumn(
-                modifier = Modifier
-                    .heightIn(max = 300.dp)
-                    .background(colorScheme.background)
-            ) {
+            LazyColumn(modifier = Modifier.heightIn(max = 300.dp)) {
                 items(list.size) { index ->
                     val value = list[index]
                     Text(
@@ -107,16 +103,14 @@ private fun AgePickerDialog(
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(
-                                if (value == selectedAge) colorScheme.primary.copy(
-                                    alpha = 0.2f
-                                )
-                                else colorScheme.background
+                                if (value == selectedAge)
+                                    MaterialTheme.colorScheme.primary.copy(alpha = 0.15f)
+                                else
+                                    Color.Transparent
                             )
                             .padding(vertical = Paddings.ExtraSmall.dp)
                             .pointerInput(Unit) {
-                                detectTapGestures {
-                                    selectedAge = value
-                                }
+                                detectTapGestures { selectedAge = value }
                             },
                         textAlign = TextAlign.Center,
                         style = MaterialTheme.typography.titleMedium

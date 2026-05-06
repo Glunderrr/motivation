@@ -54,6 +54,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -128,7 +129,8 @@ fun Add(
                     if (it == DrawerElement.Generate) {
                         GenerateScreenContent(
                             modifier = Modifier
-                                .fillMaxSize(),
+                                .fillMaxSize()
+                                .padding(paddingValues),
                             uiState = uiState,
                             onAction = onAction
                         )
@@ -155,7 +157,7 @@ private fun DrawerContent(
     selectedElement: DrawerElement
 ) {
     ModalDrawerSheet(
-        drawerShape = RoundedCornerShape(0.dp),
+        drawerShape = RoundedCornerShape(topEnd = 16.dp, bottomEnd = 16.dp),
     ) {
         Column(
             modifier = modifier, verticalArrangement = Arrangement.SpaceBetween
@@ -252,8 +254,10 @@ private fun GenerateScreenContent(
             if (uiState.isLoading) {
                 CircularProgressIndicator(
                     modifier = Modifier.size(size),
-                    trackColor = colorScheme.background,
-                    strokeWidth = size / 2
+                    color = colorScheme.primary,
+                    trackColor = colorScheme.surfaceVariant,
+                    strokeWidth = 6.dp,
+                    strokeCap = StrokeCap.Round
                 )
             } else {
                 Button(

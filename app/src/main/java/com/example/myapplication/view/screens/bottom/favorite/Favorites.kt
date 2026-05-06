@@ -4,7 +4,9 @@ import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -31,16 +33,21 @@ fun Favorites(
     onAction: (FavUIAction) -> Unit,
 ) {
     if (uiState.favList.isEmpty()) {
-        EmptyListTitle(
-            upText = stringResource(R.string.fav_empty),
-            downText = stringResource(R.string.pass_to_add_screen),
+        Box(
+            modifier = modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
         ) {
-            onAction(
-                FavUIAction.NavigateToAddScreen(
-                    drawerElement = DrawerElement.Generate,
-                    phrase = Phrase()
+            EmptyListTitle(
+                upText = stringResource(R.string.fav_empty),
+                downText = stringResource(R.string.pass_to_add_screen),
+            ) {
+                onAction(
+                    FavUIAction.NavigateToAddScreen(
+                        drawerElement = DrawerElement.Generate,
+                        phrase = Phrase()
+                    )
                 )
-            )
+            }
         }
     } else {
         Scaffold(

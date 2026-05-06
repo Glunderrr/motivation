@@ -1,6 +1,10 @@
 package com.example.myapplication.di
 
 import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.PreferenceDataStoreFactory
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.room.Room
 import com.example.myapplication.data.room.AppDatabase
 import dagger.Module
@@ -40,4 +44,11 @@ object AppModule {
     @Provides
     fun providePersonalDao(db: AppDatabase) =
         db.getPersonalDao()
+
+    @Singleton
+    @Provides
+    fun provideDataStore(@ApplicationContext context: Context): DataStore<@JvmSuppressWildcards Preferences> =
+        PreferenceDataStoreFactory.create(
+            produceFile = { context.preferencesDataStoreFile("settings") }
+        )
 }

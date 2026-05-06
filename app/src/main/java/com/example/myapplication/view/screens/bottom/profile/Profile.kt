@@ -1,7 +1,6 @@
 package com.example.myapplication.view.screens.bottom.profile
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
@@ -17,7 +16,9 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -26,15 +27,17 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.InputChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Shapes
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -46,14 +49,15 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.paint
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.room.util.TableInfo
 import com.example.myapplication.R
 import com.example.myapplication.data.model.Personal
 import com.example.myapplication.data.model.Phrase
-import com.example.myapplication.ui.theme.FontSize
 import com.example.myapplication.ui.theme.Paddings
 import com.example.myapplication.view.elements.CustomTextField
 import com.example.myapplication.view.elements.CustomTopBar
@@ -70,7 +74,9 @@ fun Profile(
     modifier: Modifier,
     uiState: ProfUIState,
     personalState: Personal,
-    onAction: (ProfUIAction) -> Unit
+    onAction: (ProfUIAction) -> Unit,
+    isDarkTheme: Boolean?,
+    onThemeChange: (Boolean?) -> Unit,
 ) {
     Scaffold(
         topBar = {
@@ -87,47 +93,67 @@ fun Profile(
             verticalArrangement = Arrangement.spacedBy(Paddings.Large.dp),
             contentPadding = PaddingValues(Paddings.Large.dp)
         ) {
-            item { CustomDivider() }
             item {
-                UserEditData(
-                    modifier = Modifier.fillMaxSize(),
-                    personalState = personalState,
-                    onAction = onAction
-                )
-            }
-            item { CustomDivider() }
-            item {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(Paddings.Medium.dp)
-                ) {
-                    Text(
-                        stringResource(R.string.themes),
-                        fontSize = FontSize.Large.sp,
-                    )
-
-                    FlowRow(
+                ElevatedCard(modifier = Modifier.fillMaxWidth()) {
+                    UserEditData(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(Paddings.Small.dp),
-                        verticalArrangement = Arrangement.spacedBy(Paddings.Small.dp),
-                        maxItemsInEachRow = 5,
+                        personalState = personalState,
+                        onAction = onAction
+                    )
+                }
+            }
+            item {
+                ElevatedCard(modifier = Modifier.fillMaxWidth()) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(Paddings.Large.dp),
+                        verticalArrangement = Arrangement.spacedBy(Paddings.Medium.dp)
                     ) {
-                        uiState.themes.forEach { item ->
-                            InputChip(
-                                onClick = {
-                                    onAction(ProfUIAction.ChangeThemeStatusInSelectedList(item))
-                                },
-                                selected = uiState.selectedThemes.contains(item),
-                                label = { Text(item.themeName) },
-                                shape = RoundedCornerShape(corner = CornerSize(Paddings.Small.dp)),
-                                border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
-                            )
+                        Text(
+                            stringResource(R.string.themes),
+                            style = MaterialTheme.typography.titleMedium,
+                        )
+                        FlowRow(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(Paddings.Small.dp),
+                            verticalArrangement = Arrangement.spacedBy(Paddings.Small.dp),
+                            maxItemsInEachRow = 5,
+                        ) {
+                            uiState.themes.forEach { item ->
+                                InputChip(
+                                    onClick = {
+                                        onAction(ProfUIAction.ChangeThemeStatusInSelectedList(item))
+                                    },
+                                    selected = uiState.selectedThemes.contains(item),
+                                    label = { Text(item.themeName) },
+                                    shape = RoundedCornerShape(corner = CornerSize(Paddings.Small.dp)),
+                                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
+                                )
+                            }
                         }
                     }
                 }
             }
-            item { CustomDivider() }
+            item {
+                ElevatedCard(modifier = Modifier.fillMaxWidth()) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = Paddings.Large.dp, vertical = Paddings.Small.dp),
+                        verticalArrangement = Arrangement.spacedBy(Paddings.Small.dp)
+                    ) {
+                        Text(
+                            stringResource(R.string.appearance),
+                            style = MaterialTheme.typography.titleMedium,
+                        )
+                        ThemeSegmentControl(
+                            isDarkTheme = isDarkTheme,
+                            onThemeChange = onThemeChange
+                        )
+                    }
+                }
+            }
             stickyHeader {
                 val durationMillis = 100
                 val isAllPhraseAnimationValue by animateFloatAsState(
@@ -145,79 +171,90 @@ fun Profile(
                         delayMillis = 0,
                         easing = { it })
                 )
-                val primaryColor by animateColorAsState(
-                    if (uiState.isAllPhrase) MaterialTheme.colorScheme.onPrimary else
-                        MaterialTheme.colorScheme.primary,
+
+                val isAllPhraseContainerColor by animateColorAsState(
+                    targetValue = if (uiState.isAllPhrase) MaterialTheme.colorScheme.primary else Color.Transparent,
                     animationSpec = tween(
                         durationMillis = durationMillis,
                         delayMillis = 0,
                         easing = { it })
                 )
-                val onPrimaryColor by animateColorAsState(
-                    if (!uiState.isAllPhrase) MaterialTheme.colorScheme.onPrimary else
-                        MaterialTheme.colorScheme.primary,
+                val isAllPhraseContentColor by animateColorAsState(
+                    targetValue = if (uiState.isAllPhrase) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.primary,
                     animationSpec = tween(
                         durationMillis = durationMillis,
                         delayMillis = 0,
                         easing = { it })
                 )
 
+
+                val isOwnPhraseContainerColor by animateColorAsState(
+                    targetValue = if (!uiState.isAllPhrase) MaterialTheme.colorScheme.primary else Color.Transparent,
+                    animationSpec = tween(
+                        durationMillis = durationMillis,
+                        delayMillis = 0,
+                        easing = { it })
+                )
+                val isOwnPhraseContentColor by animateColorAsState(
+                    targetValue = if (!uiState.isAllPhrase) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.primary,
+                    animationSpec = tween(
+                        durationMillis = durationMillis,
+                        delayMillis = 0,
+                        easing = { it })
+                )
                 Row(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .background(MaterialTheme.colorScheme.background)
-                        .padding(vertical = Paddings.Small.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
+                        .border(
+                            border = BorderStroke(
+                                width = 2.dp,
+                                color = MaterialTheme.colorScheme.primary,
+                            ),
+                            shape = RoundedCornerShape(Paddings.Medium.dp)
+                        )
                 ) {
-                    Row(
+                    Box(
                         modifier = Modifier
-                            .border(
-                                border = BorderStroke(
-                                    2.dp,
-                                    MaterialTheme.colorScheme.primary
-                                ),
-                                shape = RoundedCornerShape(Paddings.Large.dp)
+                            .weight(isAllPhraseAnimationValue)
+                            .clip(
+                                RoundedCornerShape(
+                                    bottomStart = Paddings.Large.dp,
+                                    topStart = Paddings.Large.dp,
+                                    topEnd = 0.dp,
+                                    bottomEnd = 0.dp,
+                                )
                             )
+                            .background(isAllPhraseContainerColor)
+                            .clickable { onAction(ProfUIAction.ChangeIsAllPhrase(true)) },
+                        contentAlignment = Alignment.Center
                     ) {
-                        TextButton(
-                            onClick = { onAction(ProfUIAction.ChangeIsAllPhrase(true)) },
-                            modifier = Modifier.weight(isAllPhraseAnimationValue),
-                            colors = ButtonDefaults.textButtonColors(
-                                containerColor = onPrimaryColor,
-                                contentColor = primaryColor,
-                            ),
-                            shape = RoundedCornerShape(
-                                bottomStart = Paddings.Large.dp,
-                                topStart = Paddings.Large.dp,
-                                topEnd = 0.dp,
-                                bottomEnd = 0.dp,
+                        Text(
+                            stringResource(R.string.all_phrase),
+                            style = MaterialTheme.typography.titleSmall,
+                            color = isAllPhraseContentColor,
+                            modifier = Modifier.padding(Paddings.Medium.dp)
+                        )
+                    }
+                    Box(
+                        modifier = Modifier
+                            .weight(isOwnPhraseAnimationValue)
+                            .clip(
+                                RoundedCornerShape(
+                                    bottomStart = 0.dp,
+                                    topStart = 0.dp,
+                                    topEnd = Paddings.Large.dp,
+                                    bottomEnd = Paddings.Large.dp,
+                                )
                             )
-                        ) {
-                            Text(
-                                stringResource(R.string.all_phrase),
-                                fontSize = FontSize.Large.sp,
-                            )
-                        }
-                        TextButton(
-                            onClick = { onAction(ProfUIAction.ChangeIsAllPhrase(false)) },
-                            modifier = Modifier.weight(isOwnPhraseAnimationValue),
-                            colors = ButtonDefaults.textButtonColors(
-                                containerColor = primaryColor,
-                                contentColor = onPrimaryColor,
-                            ),
-                            shape = RoundedCornerShape(
-                                bottomStart = 0.dp,
-                                topStart = 0.dp,
-                                topEnd = Paddings.Large.dp,
-                                bottomEnd = Paddings.Large.dp,
-                            ),
-                        ) {
-                            Text(
-                                stringResource(R.string.own_phrase),
-                                fontSize = FontSize.Large.sp,
-                            )
-                        }
+                            .background(isOwnPhraseContainerColor)
+                            .clickable { onAction(ProfUIAction.ChangeIsAllPhrase(false)) },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            stringResource(R.string.own_phrase),
+                            style = MaterialTheme.typography.titleSmall,
+                            color = isOwnPhraseContentColor,
+                            modifier = Modifier.padding(Paddings.Medium.dp)
+                        )
                     }
                 }
             }
@@ -365,8 +402,7 @@ private fun UserEditData(
     Column(
         Modifier
             .fillMaxWidth()
-            .padding(vertical = Paddings.Large.dp)
-            .background(MaterialTheme.colorScheme.background),
+            .padding(Paddings.Large.dp),
         verticalArrangement = Arrangement.spacedBy(Paddings.Large.dp),
     ) {
         Text(
@@ -578,9 +614,64 @@ private fun UserEditData(
 }
 
 @Composable
-private fun CustomDivider() {
-    HorizontalDivider(
-        thickness = 2.dp,
-        color = MaterialTheme.colorScheme.primary
+private fun ThemeSegmentControl(
+    isDarkTheme: Boolean?,
+    onThemeChange: (Boolean?) -> Unit,
+) {
+    val options: List<Pair<Boolean?, Int>> = listOf(
+        null to R.string.theme_system,
+        false to R.string.theme_light,
+        true to R.string.theme_dark,
     )
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(
+                border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary),
+                shape = RoundedCornerShape(Paddings.Large.dp)
+            )
+    ) {
+        options.forEachIndexed { index, (mode, labelRes) ->
+            val isSelected = isDarkTheme == mode
+            val containerColor by animateColorAsState(
+                targetValue = if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent,
+                animationSpec = tween(durationMillis = 150),
+                label = "themeSegment_$index"
+            )
+            val contentColor by animateColorAsState(
+                targetValue = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.primary,
+                animationSpec = tween(durationMillis = 150),
+                label = "themeSegmentContent_$index"
+            )
+            val shape = when (index) {
+                0 -> RoundedCornerShape(
+                    topStart = Paddings.Large.dp, bottomStart = Paddings.Large.dp,
+                    topEnd = 0.dp, bottomEnd = 0.dp
+                )
+
+                options.lastIndex -> RoundedCornerShape(
+                    topEnd = Paddings.Large.dp, bottomEnd = Paddings.Large.dp,
+                    topStart = 0.dp, bottomStart = 0.dp
+                )
+
+                else -> RoundedCornerShape(0.dp)
+            }
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .clip(shape)
+                    .background(containerColor)
+                    .clickable { onThemeChange(mode) },
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    stringResource(labelRes),
+                    style = MaterialTheme.typography.labelLarge,
+                    color = contentColor,
+                    modifier = Modifier.padding(Paddings.Medium.dp)
+                )
+            }
+        }
+    }
 }
+

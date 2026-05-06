@@ -32,6 +32,7 @@ import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSavedStateNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import androidx.navigation3.ui.rememberSceneSetupNavEntryDecorator
+import com.example.myapplication.data.global_states.ThemeState
 import com.example.myapplication.data.global_states.UserParametersState
 import com.example.myapplication.view.screens.bottom.favorite.Favorites
 import com.example.myapplication.view.screens.bottom.add.Add
@@ -49,7 +50,8 @@ import com.example.myapplication.view.screens.own.AboutProgram
 @Composable
 fun AppNavigation(
     modifier: Modifier,
-    userParam: UserParametersState
+    userParam: UserParametersState,
+    themeState: ThemeState
 ) {
     if (userParam.personalDataIsBlank) {
         SignUpScreen(
@@ -176,6 +178,7 @@ fun AppNavigation(
                             val viewModel = hiltViewModel<ProfileViewModel>()
                             val state by viewModel.uiState.collectAsStateWithLifecycle()
                             val personalState by userParam.personalState.collectAsStateWithLifecycle()
+                            val isDarkTheme by themeState.isDarkTheme.collectAsStateWithLifecycle()
                             val onAction = viewModel::onAction
 
                             onAction(
@@ -193,7 +196,9 @@ fun AppNavigation(
                                 modifier = Modifier.background(color = MaterialTheme.colorScheme.background),
                                 uiState = state,
                                 personalState = personalState,
-                                onAction = onAction
+                                onAction = onAction,
+                                isDarkTheme = isDarkTheme,
+                                onThemeChange = themeState::setTheme
                             )
                         }
 

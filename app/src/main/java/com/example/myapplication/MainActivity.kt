@@ -5,9 +5,12 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import com.example.myapplication.data.global_states.ThemeState
 import com.example.myapplication.data.global_states.UserParametersState
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import com.example.myapplication.navigation.AppNavigation
@@ -19,14 +22,21 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var userParam: UserParametersState
 
+    @Inject
+    lateinit var themeState: ThemeState
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            MyApplicationTheme {
+            val isDarkTheme by themeState.isDarkTheme.collectAsState()
+            val useDark = isDarkTheme ?: isSystemInDarkTheme()
+
+            MyApplicationTheme(darkTheme = useDark) {
                 AppNavigation(
                     modifier = Modifier.background(color = MaterialTheme.colorScheme.background),
-                    userParam = userParam
+                    userParam = userParam,
+                    themeState = themeState
                 )
             }
         }

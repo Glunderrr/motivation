@@ -39,6 +39,7 @@ lifecycleViewmodelNavigation3 = "1.0.0-alpha04"
 # Core Navigation 3 libraries
 androidx-animation = { module = "androidx.compose.animation:animation", version.ref = "animation" }
 androidx-datastore = { module = "androidx.datastore:datastore", version.ref = "datastore" }
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
 androidx-navigation-compose-v277 = { module = "androidx.navigation:navigation-compose", version.ref = "androidxNavigationNavigationCompose" }
 androidx-navigation-compose-v302 = { module = "androidx.navigation:navigation-compose", version.ref = "androidxNavigationComposeVersion" }
 androidx-navigation-compose-v320alpha01 = { module = "androidx.navigation:navigation-compose", version.ref = "androidxNavigationCompose" }

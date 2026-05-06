@@ -124,6 +124,7 @@ dependencies {
 
     //Data store
     implementation(libs.androidx.datastore)
+    implementation(libs.androidx.datastore.preferences)
 
 
     implementation(kotlin("reflect"))

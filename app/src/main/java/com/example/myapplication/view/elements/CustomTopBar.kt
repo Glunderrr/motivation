@@ -40,18 +40,17 @@ fun CustomTopBar(
         Row(
             Modifier
                 .fillMaxWidth()
-                .background(color = MaterialTheme.colorScheme.primary),
+                .background(color = MaterialTheme.colorScheme.errorContainer),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             IconButton(
                 onClick = onClear,
-                modifier = Modifier
-                    .padding(Paddings.Medium.dp)
+                modifier = Modifier.padding(Paddings.Medium.dp)
             ) {
                 Icon(
                     modifier = Modifier.size(50.dp),
                     imageVector = Icons.Default.Clear,
-                    tint = MaterialTheme.colorScheme.background,
+                    tint = MaterialTheme.colorScheme.onErrorContainer,
                     contentDescription = "Close button"
                 )
             }
@@ -63,7 +62,7 @@ fun CustomTopBar(
                 Icon(
                     modifier = Modifier.size(50.dp),
                     imageVector = Icons.Default.Delete,
-                    tint = MaterialTheme.colorScheme.errorContainer,
+                    tint = MaterialTheme.colorScheme.onErrorContainer,
                     contentDescription = "Delete button"
                 )
             }

@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-Content \"C:\\\\Users\\\\Ruslan\\\\AndroidStudioProjects\\\\MyApplication\\\\app\\\\src\\\\main\\\\java\\\\com\\\\example\\\\myapplication\\\\view\\\\screens\\\\bottom\\\\profile\\\\Profile.kt\")",
+      "Bash(Select-Object -Last 10)"
+    ]
+  }
+}
