@@ -10,6 +10,7 @@ data class AddUIState(
     val openThemeDialog: Boolean = false,
     val openPhraseDialog: Boolean = false,
     val isLoading: Boolean = false,
+    val showNetworkError: Boolean = false,
     val phrase: Phrase = Phrase(),
     val showDrawerSheet: Boolean = false,
     val selectedDrawerElement: DrawerElement = DrawerElement.Generate,

@@ -7,6 +7,7 @@ import javax.inject.Inject
 class ChangePhraseLikedStatus @Inject constructor(
     private val repository: PhraseRepository
 ) {
+    // Оновлює статус "улюблена" для одної або кількох фраз одночасно
     suspend fun invoke(vararg phrase: Phrase, likeStatus: Boolean) {
         phrase.forEach {
             repository.update(it.copy(isLiked = likeStatus))

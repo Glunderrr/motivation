@@ -18,7 +18,12 @@ import com.example.myapplication.data.room.daos.ThemeDao
 )
 abstract class AppDatabase : RoomDatabase() {
 
+    // Повертає DAO для роботи з таблицею тем
     abstract fun getThemeDao(): ThemeDao
+
+    // Повертає DAO для роботи з таблицею фраз
     abstract fun getPhraseDao(): PhraseDao
+
+    // Повертає DAO для роботи з таблицею особистих даних користувача
     abstract fun getPersonalDao(): PersonalDao
 }

@@ -50,6 +50,8 @@ import com.example.myapplication.view.elements.NextButton
 import com.example.myapplication.view.elements.SelectTextField
 import kotlinx.coroutines.launch
 
+// Багатосторінковий екран реєстрації на основі HorizontalPager із забороненим ручним свайпом;
+// перехід між сторінками можливий лише через кнопку "Далі" після заповнення обов'язкових полів
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignUpScreen(
@@ -78,7 +80,7 @@ fun SignUpScreen(
                             repeat(pagerState.pageCount - 2) { iteration ->
                                 val color =
                                     if (pagerState.currentPage == iteration + 1) MaterialTheme.colorScheme.primary
-                                    else MaterialTheme.colorScheme.inversePrimary
+                                    else MaterialTheme.colorScheme.secondary
                                 Box(
                                     modifier = Modifier
                                         .padding(2.dp)
@@ -159,6 +161,7 @@ fun SignUpScreen(
     }
 }
 
+// Вітальний екран із маскотом застосунку та кнопкою початку реєстрації
 @Composable
 fun StartScreen(
     modifier: Modifier = Modifier,
@@ -188,6 +191,8 @@ fun StartScreen(
     }
 }
 
+// Перший крок реєстрації: базові дані (ім'я, вік, стать, регіон);
+// кнопка "Далі" активна лише після заповнення всіх обов'язкових полів
 @Composable
 fun FirstScreen(
     modifier: Modifier = Modifier,
@@ -268,6 +273,7 @@ fun FirstScreen(
 
 }
 
+// Другий крок реєстрації: психологічний профіль (особистість, емоційний стан, цінності, ціль, сфера, виклики, досвід)
 @Composable
 fun SecondScreen(
     modifier: Modifier = Modifier,
@@ -380,6 +386,7 @@ fun SecondScreen(
     }
 }
 
+// Третій крок реєстрації: налаштування параметрів генерації фраз (тон, формат, максимальна довжина, звернення по імені)
 @Composable
 fun ThirdScreen(
     modifier: Modifier = Modifier,
@@ -470,6 +477,7 @@ fun ThirdScreen(
 
 }
 
+// Завершальний екран реєстрації: підтвердження та збереження заповненого профілю до бази даних
 @Composable
 fun LastScreen(
     modifier: Modifier = Modifier,

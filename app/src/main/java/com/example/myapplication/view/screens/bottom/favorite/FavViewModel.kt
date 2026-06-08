@@ -31,6 +31,8 @@ class FavViewModel @Inject constructor(
     val uiState: StateFlow<FavUIState> = _uiState.asStateFlow()
 
     init {
+        // Підписується одночасно на список улюблених фраз та активні фільтри сортування,
+        // оновлюючи відображуваний список при будь-якій зміні
         viewModelScope.launch {
             combine(
                 getLikedPhrase.invoke(),
@@ -45,14 +47,17 @@ class FavViewModel @Inject constructor(
         }
     }
 
+    // Обробляє всі UI-події екрана улюблених фраз відповідно до патерну UDF
     fun onAction(action: FavUIAction) {
         when (action) {
             is FavUIAction.LongPressCard -> {
+                // Довге натискання активує режим вибору лише якщо список вибраних порожній
                 if (_uiState.value.selectedList.isEmpty())
                     updateSelectedList(action.phrase)
             }
 
             is FavUIAction.TapCard -> {
+                // Звичайне натискання додає/прибирає фразу лише в активному режимі вибору
                 if (_uiState.value.selectedList.isNotEmpty())
                     updateSelectedList(action.phrase)
             }
@@ -62,6 +67,7 @@ class FavViewModel @Inject constructor(
             }
 
             is FavUIAction.DeleteSelectedPhrases -> {
+                // Знімає статус "улюблена" у всіх вибраних фраз (видаляє їх з екрана улюблених)
                 viewModelScope.launch {
                     changePhraseLikedStatus.invoke(
                         phrase = uiState.value.selectedList.toTypedArray(),
@@ -76,10 +82,10 @@ class FavViewModel @Inject constructor(
                     action.drawerElement,
                     action.phrase
                 )
-
             }
 
             is FavUIAction.SetNavigateFun -> {
+                // Зберігає лямбду навігації, передану ззовні через NavDisplay
                 _uiState.update { state ->
                     state.copy(
                         navigateToAddScreen = action.navigateToAddScreen
@@ -93,6 +99,7 @@ class FavViewModel @Inject constructor(
         }
     }
 
+    // Додає фразу до списку вибраних або видаляє її, якщо вона вже там є
     private fun updateSelectedList(phrase: Phrase) {
         _uiState.update {
             if (it.selectedList.contains(phrase))
@@ -106,6 +113,7 @@ class FavViewModel @Inject constructor(
         }
     }
 
+    // Очищає список вибраних фраз та завершує режим групового вибору
     private fun clearSelectedList() {
         _uiState.update { state ->
             state.copy(

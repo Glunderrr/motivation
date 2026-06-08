@@ -12,6 +12,7 @@ class CopyPhraseToClipboard @Inject constructor(
     @ApplicationContext
     private val applicationContext: Context,
 ) {
+    // Копіює текст фрази до буфера обміну системи
     fun invoke(
         phrase: Phrase,
     ) {

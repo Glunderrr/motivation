@@ -2,7 +2,11 @@
   "permissions": {
     "allow": [
       "Bash(Get-Content \"C:\\\\Users\\\\Ruslan\\\\AndroidStudioProjects\\\\MyApplication\\\\app\\\\src\\\\main\\\\java\\\\com\\\\example\\\\myapplication\\\\view\\\\screens\\\\bottom\\\\profile\\\\Profile.kt\")",
-      "Bash(Select-Object -Last 10)"
+      "Bash(Select-Object -Last 10)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\Ruslan\\\\AndroidStudioProjects\\\\MyApplication\" -Recurse -Depth 3)",
+      "Bash(Select-Object -ExpandProperty FullName)",
+      "Bash(Find app\\\\src\\\\main\\\\java -type d)",
+      "Bash(Sort)"
     ]
   }
 }

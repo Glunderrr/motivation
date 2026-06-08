@@ -47,6 +47,8 @@ import com.example.myapplication.view.screens.bottom.profile.ProfileViewModel
 import com.example.myapplication.view.screens.own.AboutProgram
 
 
+// Визначає точку входу застосунку: показує екран реєстрації якщо профіль не заповнений,
+// або основний інтерфейс із нижньою навігацією якщо дані вже існують
 @Composable
 fun AppNavigation(
     modifier: Modifier,
@@ -63,6 +65,7 @@ fun AppNavigation(
             onSave = userParam::savePersonalData
         )
     } else {
+        // BackstackWrapper обгортає стек навігації та забезпечує логіку без дублікатів
         val backStack = BackstackWrapper(rememberNavBackStack<Routes>(Routes.Profile))
         val bottomItems = listOf(
             Routes.Add(),
@@ -70,6 +73,7 @@ fun AppNavigation(
             Routes.Profile
         )
         var selectedIndex by remember { mutableIntStateOf(bottomItems.indexOf(Routes.Profile)) }
+        // Синхронізує підсвічений елемент нижньої панелі з поточним активним маршрутом
         LaunchedEffect(backStack.last()) {
             selectedIndex = bottomItems.indexOf(backStack.last())
             Log.d(
@@ -105,6 +109,7 @@ fun AppNavigation(
                 onBack = {
                     backStack.onBack()
                 },
+                // Визначає напрям анімації переходу залежно від відносного індексу маршрутів
                 transitionSpec = {
                     val from = backStack.getPreviousRoute()
                     val to = backStack.last()
@@ -215,6 +220,7 @@ fun AppNavigation(
     }
 }
 
+// Відображає нижню панель навігації з іконками та підписами; підсвічує активний розділ
 @Composable
 fun BottomNavigationBar(
     items: List<Routes>,

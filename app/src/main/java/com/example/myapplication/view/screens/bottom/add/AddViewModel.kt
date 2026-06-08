@@ -30,6 +30,7 @@ class AddViewModel @Inject constructor(
 
     init {
         Log.d("AddViewModel", "init")
+        // Підписується на список тем із бази даних і оновлює стан UI при кожній зміні
         viewModelScope.launch {
             themeUseCase.invoke().collect { themes ->
                 _uiState.update { state ->
@@ -46,20 +47,32 @@ class AddViewModel @Inject constructor(
         super.onCleared()
     }
 
+    // Обробляє всі UI-події екрана додавання фрази відповідно до патерну UDF (Unidirectional Data Flow)
     fun onAction(action: AddUIAction) {
         when (action) {
             is AddUIAction.GeneratePhrase -> {
                 viewModelScope.launch {
                     _uiState.update { it.copy(isLoading = true) }
-                    val newPhrase =
-                        generatePhraseUseCase.invoke(
+                    try {
+                        // Виконує запит до API і оновлює стан із згенерованою фразою
+                        val newPhrase = generatePhraseUseCase.invoke(
                             _uiState.value.phrase.theme,
                             userParametersState
                         )
-                    _uiState.update { it.copy(phrase = newPhrase, isLoading = false) }
-                    if (!_uiState.value.isLoading)
-                        onAction(AddUIAction.OpenPhraseDialog)
+                        _uiState.update { it.copy(phrase = newPhrase, isLoading = false) }
+                        if (!_uiState.value.isLoading)
+                            onAction(AddUIAction.OpenPhraseDialog)
+                    } catch (e: Exception) {
+                        // При будь-якій мережевій помилці скидає індикатор завантаження та показує діалог помилки
+                        Log.e("AddViewModel", "Network error", e)
+                        _uiState.update { it.copy(isLoading = false, showNetworkError = true) }
+                    }
                 }
+            }
+
+            is AddUIAction.DismissNetworkError -> {
+                // Закриває діалог помилки мережі та повертає стан до нормального
+                _uiState.update { it.copy(showNetworkError = false) }
             }
 
             is AddUIAction.OpenThemeDialog -> {
@@ -70,12 +83,12 @@ class AddViewModel @Inject constructor(
                 _uiState.update { it.copy(openThemeDialog = false) }
             }
 
-
             is AddUIAction.OpenPhraseDialog -> {
                 _uiState.update { it.copy(openPhraseDialog = true) }
             }
 
             is AddUIAction.ClosePhraseDialog -> {
+                // Закриває діалог і скидає поточну фразу для наступної генерації
                 _uiState.update { it.copy(openPhraseDialog = false, phrase = Phrase()) }
             }
 
@@ -89,17 +102,16 @@ class AddViewModel @Inject constructor(
                 }
             }
 
-
             is AddUIAction.ChangeLikedStatusOfNewPhrase -> {
                 _uiState.update { it.copy(phrase = it.phrase.copy(isLiked = !it.phrase.isLiked)) }
             }
-
 
             is AddUIAction.ShowDrawerSheet -> {
                 _uiState.update { it.copy(showDrawerSheet = action.value) }
             }
 
             is AddUIAction.ChangeSelectedDrawerElement -> {
+                // Перемикає між режимами "Генерувати" та "Створити власну", скидаючи поточну фразу
                 _uiState.update {
                     it.copy(
                         selectedDrawerElement = action.element,
@@ -119,6 +131,7 @@ class AddViewModel @Inject constructor(
             }
 
             AddUIAction.SavePhrase -> {
+                // Зберігає поточну фразу до бази даних і скидає поле введення
                 viewModelScope.launch {
                     upsertPhraseUseCase.invoke(
                         _uiState.value.phrase

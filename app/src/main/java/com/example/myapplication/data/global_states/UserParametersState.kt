@@ -37,7 +37,8 @@ class UserParametersState @Inject constructor(
     private val _state = MutableStateFlow(Personal())
     val personalState: StateFlow<Personal> = _state.asStateFlow()
 
-
+    // Підписується на зміни особистих даних з репозиторію та оновлює локальний стан;
+    // після першого отримання даних скидає прапорець personalDataIsBlank
     private fun launch() {
         scope.launch {
             personalRepository.getPersonal().collect { personal ->
@@ -49,11 +50,13 @@ class UserParametersState @Inject constructor(
         }
     }
 
+    // Оновлює окреме поле профілю користувача за рядковим ключем без перестворення всього об'єкта
     fun updateFieldByKey(key: String, value: Any?) {
         val current = _state.value.setFieldByKey(key, value)
         _state.update { current }
     }
 
+    // Зберігає поточний стан особистих даних у базу даних та знімає прапорець незаповненого профілю
     fun savePersonalData() {
         scope.launch {
             personalRepository.upsertPersonal(_state.value)
@@ -63,6 +66,8 @@ class UserParametersState @Inject constructor(
 }
 
 
+// Повертає копію об'єкта Personal із оновленим полем, знайденим за анотацією BindKey;
+// використовує рефлексію Kotlin для динамічного присвоєння значення без явного when-маппінгу
 fun Personal.setFieldByKey(key: String, value: Any?): Personal {
     val kClass = this::class
 
@@ -87,6 +92,7 @@ fun Personal.setFieldByKey(key: String, value: Any?): Personal {
     return ctor.callBy(args)
 }
 
+// Приводить вхідне значення до типу цільового поля для коректного присвоєння через рефлексію
 private fun coerceType(value: Any?, targetClass: kotlin.reflect.KClass<*>): Any? {
     if (value == null) return null
     return when (targetClass) {

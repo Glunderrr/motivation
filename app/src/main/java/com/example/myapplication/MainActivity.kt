@@ -25,6 +25,8 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var themeState: ThemeState
 
+    // Ініціалізує Compose-інтерфейс, підписується на обраний режим теми та
+    // передає управління компоненту навігації AppNavigation
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()

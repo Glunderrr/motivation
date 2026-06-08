@@ -40,4 +40,6 @@ sealed class AddUIAction {
 
     data object OnAboutProgramClick : AddUIAction()
     data class SetAboutProgramFun(val aboutProgramFun: () -> Unit) : AddUIAction()
+
+    data object DismissNetworkError : AddUIAction()
 }

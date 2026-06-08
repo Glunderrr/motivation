@@ -8,6 +8,7 @@ import javax.inject.Inject
 class GeneratePhrase @Inject constructor(
     private val apiPhraseRepository: ApiPhraseRepository
 ) {
+    // Виконує запит до API через репозиторій і повертає згенеровану фразу відповідно до профілю користувача та теми
     suspend operator fun invoke(theme: String, userParam: UserParametersState): Phrase {
         return apiPhraseRepository.getMotivationalPhrase(theme = theme, userParam = userParam)
     }

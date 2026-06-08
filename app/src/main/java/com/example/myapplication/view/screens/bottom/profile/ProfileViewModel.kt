@@ -36,6 +36,8 @@ class ProfileViewModel @Inject constructor(
     val uiState: StateFlow<ProfUIState> = _uiState
 
     init {
+        // Підписується одночасно на теми, всі фрази та власні фрази;
+        // об'єднує потоки через combine для синхронного оновлення UI
         viewModelScope.launch {
             combine(
                 getTheme.invoke(),
@@ -53,6 +55,7 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
+    // Обробляє всі UI-події екрана профілю відповідно до патерну UDF
     fun onAction(action: ProfUIAction) {
         when (action) {
             is ProfUIAction.ClearPhraseSelectedList -> {
@@ -60,6 +63,7 @@ class ProfileViewModel @Inject constructor(
             }
 
             is ProfUIAction.DeleteSelectedPhrase -> {
+                // Видаляє вибрані фрази з бази даних та скидає список вибору
                 viewModelScope.launch {
                     deletePhrases.invoke(_uiState.value.selectedPhrases)
                 }
@@ -67,6 +71,7 @@ class ProfileViewModel @Inject constructor(
             }
 
             is ProfUIAction.DoubleTapCard -> {
+                // Перемикає статус "улюблена" для фрази при подвійному натисканні
                 viewModelScope.launch {
                     changePhraseLikedStatus.invoke(
                         action.phrase,
@@ -76,6 +81,7 @@ class ProfileViewModel @Inject constructor(
             }
 
             is ProfUIAction.ChangeThemeStatusInSelectedList -> {
+                // Додає або видаляє тему з фільтрів сортування та перераховує відсортовані списки
                 with(sortParam) {
                     _uiState.update { state ->
                         if (themes.value.contains(action.theme)) {
@@ -94,17 +100,19 @@ class ProfileViewModel @Inject constructor(
             }
 
             is ProfUIAction.LongPressCard -> {
+                // Довге натискання активує режим вибору лише якщо список вибраних порожній
                 if (_uiState.value.selectedPhrases.isEmpty())
                     updateSelectedList(action.phrase)
             }
 
             is ProfUIAction.TapCard -> {
+                // Звичайне натискання додає/прибирає фразу лише в активному режимі вибору
                 if (_uiState.value.selectedPhrases.isNotEmpty())
                     updateSelectedList(action.phrase)
             }
 
-
             is ProfUIAction.ChangeIsAllPhrase -> {
+                // Перемикає відображення між усіма фразами та власними
                 _uiState.update { state ->
                     state.copy(isAllPhrase = action.isAllPhrase)
                 }
@@ -115,6 +123,7 @@ class ProfileViewModel @Inject constructor(
             }
 
             is ProfUIAction.SetNavigateFun -> {
+                // Зберігає лямбду навігації, передану ззовні через NavDisplay
                 _uiState.update { state ->
                     state.copy(
                         navigateToAddScreen = action.navigateToAddScreen
@@ -130,6 +139,7 @@ class ProfileViewModel @Inject constructor(
             }
 
             is ProfUIAction.SetPersonalData -> {
+                // Оновлює окреме поле профілю користувача за ключем без перестворення всього об'єкта
                 userParam.updateFieldByKey(action.key, action.value).apply {
                     Log.d(
                         "ProfileViewModel",
@@ -139,11 +149,13 @@ class ProfileViewModel @Inject constructor(
             }
 
             ProfUIAction.SavePersonalData -> {
+                // Зберігає оновлений профіль користувача в базу даних
                 userParam.savePersonalData()
             }
         }
     }
 
+    // Додає фразу до списку вибраних або видаляє її, якщо вона вже там є
     private fun updateSelectedList(phrase: Phrase) {
         _uiState.update {
             if (it.selectedPhrases.contains(phrase))
@@ -157,6 +169,7 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
+    // Очищає список вибраних фраз та завершує режим групового вибору
     private fun clearSelectedList() {
         _uiState.update {
             it.copy(

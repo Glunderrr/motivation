@@ -11,6 +11,9 @@ import javax.inject.Inject
 class ApiPhraseRepositoryImpl @Inject constructor(
     private val apiService: ApiService
 ) : ApiPhraseRepository {
+
+    // Формує персоналізований промпт на основі 14 параметрів профілю користувача та обраної теми,
+    // надсилає запит до Mistral AI і повертає згенеровану мотиваційну фразу
     override suspend fun getMotivationalPhrase(
         theme: String,
         userParam: UserParametersState
@@ -26,7 +29,7 @@ class ApiPhraseRepositoryImpl @Inject constructor(
                             Generate exactly one short motivational phrase in Ukrainian.
 
                             Theme: ${theme}
-                            
+
                             User profile:
                             Age: ${userParam.personalState.value.age}, Gender: ${userParam.personalState.value.gender}, Region: ${userParam.personalState.value.region}
                             Personality: ${userParam.personalState.value.personality}, Emotional state: ${userParam.personalState.value.emotionalState}, Values: ${userParam.personalState.value.userValues}
@@ -42,6 +45,7 @@ class ApiPhraseRepositoryImpl @Inject constructor(
                 )
             )
         )
+        // Витягує текст першого варіанту відповіді та обгортає його в модель Phrase
         return response.choices[0].message.content.let { content ->
             Phrase(
                 phrase = content,

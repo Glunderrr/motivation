@@ -173,7 +173,7 @@ fun Profile(
                 )
 
                 val isAllPhraseContainerColor by animateColorAsState(
-                    targetValue = if (uiState.isAllPhrase) MaterialTheme.colorScheme.primary else Color.Transparent,
+                    targetValue = if (uiState.isAllPhrase) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.background,
                     animationSpec = tween(
                         durationMillis = durationMillis,
                         delayMillis = 0,
@@ -189,7 +189,7 @@ fun Profile(
 
 
                 val isOwnPhraseContainerColor by animateColorAsState(
-                    targetValue = if (!uiState.isAllPhrase) MaterialTheme.colorScheme.primary else Color.Transparent,
+                    targetValue = if (!uiState.isAllPhrase) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.background,
                     animationSpec = tween(
                         durationMillis = durationMillis,
                         delayMillis = 0,
@@ -634,7 +634,7 @@ private fun ThemeSegmentControl(
         options.forEachIndexed { index, (mode, labelRes) ->
             val isSelected = isDarkTheme == mode
             val containerColor by animateColorAsState(
-                targetValue = if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent,
+                targetValue = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.background,
                 animationSpec = tween(durationMillis = 150),
                 label = "themeSegment_$index"
             )

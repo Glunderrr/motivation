@@ -30,6 +30,7 @@ class ThemeState @Inject constructor(
     val isDarkTheme: StateFlow<Boolean?> = _isDarkTheme.asStateFlow()
 
     init {
+        // Підписується на збережене значення теми з DataStore при старті застосунку
         scope.launch {
             dataStore.data.collect { prefs ->
                 _isDarkTheme.value = when (prefs[THEME_MODE_KEY]) {
@@ -42,6 +43,8 @@ class ThemeState @Inject constructor(
         }
     }
 
+    // Зберігає обраний режим теми в DataStore для збереження між сесіями застосунку;
+    // null означає слідування системній темі пристрою
     fun setTheme(isDark: Boolean?) {
         scope.launch {
             dataStore.edit { prefs ->

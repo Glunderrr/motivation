@@ -7,6 +7,7 @@ import javax.inject.Inject
 class DeletePhrases @Inject constructor(
     private val phraseRepository: PhraseRepository
 ) {
+    // Видаляє список фраз з локальної бази даних
     suspend fun invoke(phrase: List<Phrase>) {
         phraseRepository.deleteAll(phrase)
     }
